@@ -1,0 +1,37 @@
+rootProject.name = 'multi-module-board'
+
+['server'].each {
+    def compDir = new File(rootDir, it)
+    if (!compDir.exists()) {
+        compDir.mkdirs()
+    }
+
+    compDir.eachDir { subDir ->
+        def gradleFile = new File(subDir.absolutePath, "build.gradle")
+        if (!gradleFile.exists()) {
+            gradleFile.text =
+                    """
+                    dependencies {
+                    
+                    }
+                    """.stripIndent(20)
+        }
+
+        [
+                "src/main/java/com/seungh1024",
+                "src/main/resources",
+                "src/test/java/com/seungh1024",
+                "src/test/resources"
+        ].each { srcDir ->
+            def srcFolder = new File(subDir.absolutePath, srcDir)
+            if (!srcFolder.exists()) {
+                srcFolder.mkdirs()
+            }
+        }
+
+        def projectName = ":${it}-${subDir.name}";
+        include projectName
+        project(projectName).projectDir = subDir
+    }
+}
+
