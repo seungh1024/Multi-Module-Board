@@ -1,6 +1,6 @@
 rootProject.name = 'multi-module-board'
 
-['server'].each {
+['server','common'].each {
     def compDir = new File(rootDir, it)
     if (!compDir.exists()) {
         compDir.mkdirs()
