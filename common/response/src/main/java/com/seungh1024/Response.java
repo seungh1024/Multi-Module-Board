@@ -3,7 +3,10 @@ package com.seungh1024;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import static com.seungh1024.ResponseType.SUCCESS;
+import static com.seungh1024.ResponseType.FAILURE;
 @Getter //이거 왜 필요하지?
 @NoArgsConstructor
 public class Response<T> {
@@ -11,25 +14,29 @@ public class Response<T> {
     private String message;
     private T data;
 
+
     @Builder
-    public Response(int code, String message, T data){
-        this.code = code;
-        this.message = message;
+    public Response(ResponseType responseType, T data){
+        this.code = responseType.getCode();
+        this.message = responseType.getMessage();
         this.data = data;
     }
 
 
+    public static Response success(){
+        return Response.builder()
+                .responseType(SUCCESS)
+                .build();
+    }
     public static  <T> Response<T> success(T data){
-        return new Response(200,"성공",data);
+        return new Response<>(SUCCESS,data);
     }
 
-    public enum ResponseType{
-        SUCCESS,
-        Failure;
-
-        public String getCode(){
-            return this.name(); // name() -> enum의 상수를 String 문자열로 반환
-        }
-
+    public static Response failure() {
+        return Response.builder()
+                .responseType(FAILURE)
+                .build();
     }
+
+
 }
