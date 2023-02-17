@@ -9,4 +9,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     //사용자 pk로 조회
     Member findMemberByMemberId(int memberId);
+
+    //이메일 중복 체크
+    Integer countMemberByMemberEmail(String memberEmail);
 }

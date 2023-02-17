@@ -20,3 +20,7 @@ spring:
         show_sql: true
         highlight_sql: true
     defer-datasource-initialization: true
+
+logging:
+  level:
+    com.seungh1024: error
