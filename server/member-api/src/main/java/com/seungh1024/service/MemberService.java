@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
@@ -55,13 +56,14 @@ public class MemberService {
 
     //TODO 업데이트,삭제 로그인 연동되면 그걸로 pk받아와서 수정 및 삭제로 변경
     //사용자 비밀번호 업데이트
+    @Transactional
     public void updateMemberPassword(int pk,String password){
         Member member = memberRepository.findMemberByMemberId(pk);
         if(member == null){
             throw new EntityNotFoundException();
         }
         member.updatePassword(password);
-        member = memberRepository.save(member);
+//        memberRepository.save(member);
     }
 
     //사용자 삭제

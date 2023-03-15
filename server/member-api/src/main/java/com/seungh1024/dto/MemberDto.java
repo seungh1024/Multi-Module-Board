@@ -35,12 +35,14 @@ public class MemberDto {
 
     @Getter
     @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL) //클래스 위에 적용하면 아래 변수들 전부 적용됨
     public static class MemberAllResponse{
-        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-        private int memberId;
-        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+//        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        private Integer memberId;
+//        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private String memberEmail;
-        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+//        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private String memberName;
+        private Boolean test = false;
     }
 }

@@ -25,7 +25,7 @@ public class ExceptionHandlerAdvice {
         // NestedExceptionUtils.getMostSpecificCause() -> 가장 구체적인 원인, 즉 가장 근본 원인을 찾아서 반환
         log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(), errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(), errorCode.getCode(), errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
@@ -33,7 +33,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleSystemException(RestApiException e){
         log.error("[SystemException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = e.getErrorCode();
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(), errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),  errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
@@ -42,7 +42,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException e){
         log.error("[IlleagalArgumentException] cause: {} , message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.ILLEGAL_ARGUMENT_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),
                 String.format("%s %s", errorCode.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage()));
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
@@ -53,6 +53,7 @@ public class ExceptionHandlerAdvice {
         log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_ARGUMENT_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
                 errorCode.getMessage(),
                 e.getBindingResult());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
@@ -63,7 +64,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e){
         log.error("[HttpMessageNotReadableException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_FORMAT_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(), errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(), errorCode.getCode(),  errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
@@ -72,7 +73,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleHttpClientErrorException(DuplicateMemberException e){
             log.error("[DuplicateMemberException : Conflict] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
             ErrorCode errorCode = MemberErrorCode.MEMBER_ALREADY_EXISTS_ERROR;
-            ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),e.getMessage()+ errorCode.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), e.getMessage()+ errorCode.getMessage());
             return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
@@ -80,7 +81,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleEntityNotFoundException(EntityNotFoundException e){
         log.error("[EntityNotFoundException] cause:{}, message: {}", NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.MEMBER_NOT_FOUND_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 

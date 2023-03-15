@@ -56,8 +56,10 @@ public class MemberController {
     public ResponseEntity searchByEmail(@PathVariable("email") String email){
         Member member = memberService.findMemberByEmail(email);
         MemberDto.MemberAllResponse response = MemberDto.MemberAllResponse.builder()
+                .memberId(0)
                 .memberEmail(member.getMemberEmail())
                 .memberName(member.getMemberName())
+                .test(false)
                 .build();
         return new ResponseEntity(success(response),HttpStatus.OK);
 

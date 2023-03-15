@@ -16,20 +16,23 @@ import java.util.List;
 public class ErrorResponse {
     private final boolean success = false;
     private final HttpStatus httpStatus;
+    private final int code;
     private final String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<ValidationError> errors;
 
-    public static ErrorResponse of(HttpStatus httpStatus, String message){
+    public static ErrorResponse of(HttpStatus httpStatus,int code, String message){
         return ErrorResponse.builder()
                 .httpStatus(httpStatus)
+                .code(code)
                 .message(message)
                 .build();
     }
-    public static ErrorResponse of(HttpStatus httpStatus, String message, BindingResult bindingResult){
+    public static ErrorResponse of(HttpStatus httpStatus,int code, String message, BindingResult bindingResult){
         return ErrorResponse.builder()
                 .httpStatus(httpStatus)
+                .code(code)
                 .message(message)
                 .errors(ValidationError.of(bindingResult))
                 .build();

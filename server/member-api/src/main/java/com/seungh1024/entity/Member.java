@@ -7,7 +7,10 @@ import lombok.*;
 @Entity
 @Table(name = "member")
 @Getter
-@ToString(exclude = "memberPassword")
+
+// toString을 Entity에 사용하면 지연 로딩 시 지연하지 않고 모두 찍어버리는 문제 발생
+// 또한 다른 엔티티와 서로 참조하는 관계로 설정되어 있다면 테스트 한다고 출력 시에 서로 무한으로 참조하며 출력되어 서버가 죽어버림
+//@ToString(exclude = "memberPassword")
 @NoArgsConstructor
 public class Member {
     @Id
