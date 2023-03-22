@@ -25,11 +25,12 @@ import org.springframework.stereotype.Service;
 public class AuthApplication {
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
     @Value("${jwt.expired}")
-    private long expiredMs;
+    private long accessExpired;
 
     public void signup(MemberDto.JoinForm memberDto){
         authService.signup(memberDto);
@@ -42,6 +43,6 @@ public class AuthApplication {
         if(member == null) throw new UsernameNotFoundException(memberEmail);
         if (!memberDto.getMemberPassword().equals(member.getMemberPassword())) throw new BadCredentialsException("");
 
-        return JwtUtil.createJwt(memberEmail, jwtSecret, expiredMs);
+        return jwtUtil.createJwt(memberEmail,jwtSecret,accessExpired);
     }
 }

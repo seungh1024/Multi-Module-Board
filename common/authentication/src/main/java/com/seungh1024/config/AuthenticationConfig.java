@@ -2,9 +2,13 @@ package com.seungh1024.config;
 
 import com.seungh1024.exception.JwtAccessDeniedHandler;
 import com.seungh1024.exception.JwtAuthenticationEntryPoint;
+import com.seungh1024.utils.JwtUtil;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,9 +26,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthenticationConfig {
     @Value("${jwt.secret}")
-    private String secretKey;
+    private String jwtSecret;
+    private final JwtUtil jwtUtil;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
@@ -49,7 +56,7 @@ public class AuthenticationConfig {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAccessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtSecret,jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package com.seungh1024.config;
 import com.seungh1024.exception.JwtErrorCode;
 import com.seungh1024.utils.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,7 +42,8 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private String secretKey;
+    private String jwtSecret;
+    private JwtUtil jwtUtil;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -62,9 +64,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Token expired 여부
         try{
-            if(!JwtUtil.isExpired(token,secretKey)){
+            if(!jwtUtil.isExpired(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
-                String memberEmail = JwtUtil.getMemberEmail(token,secretKey);
+                String memberEmail = jwtUtil.getMemberEmail(token,jwtSecret);
 
                 //권한 부여
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -80,7 +82,10 @@ public class JwtFilter extends OncePerRequestFilter {
             request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name());
         }catch(SignatureException e) {
             request.setAttribute("exception", JwtErrorCode.TOKEN_SIGNATURE_ERROR.name());
-        }catch (Exception e){
+        }catch(MalformedJwtException e){
+            request.setAttribute("exception", JwtErrorCode.TOKEN_NOT_CORRECT.name());
+        }
+        catch (Exception e){
             log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
             e.printStackTrace();
         }
