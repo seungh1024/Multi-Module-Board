@@ -10,10 +10,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,7 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
     private String jwtSecret;
     private JwtUtil jwtUtil;
+    private StringRedisTemplate redisTemplate;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -62,12 +65,18 @@ public class JwtFilter extends OncePerRequestFilter {
         // "Bearer {token}" 형식이기 때문에 공백으로 split 후 1번째걸 가져와야 token을 가져옴!
         String token = authorization.split(" ")[1];
 
+        final HashOperations<String, Object, Object> valueOperations = redisTemplate.opsForHash();
         // Token expired 여부
         try{
+            //유효한 토큰인 경우
             if(!jwtUtil.isExpired(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
                 String memberEmail = jwtUtil.getMemberEmail(token,jwtSecret);
-
+                String blackListToken = (String)valueOperations.get("refreshToken:"+token,"id");
+                // 블랙 리스트 토큰이 존재하고, 해당 사용자 이름으로 등록된 토큰과 요청한 토큰이 같다면 예외 발생
+                if(blackListToken != null && blackListToken.equals(token)){
+                    throw new AccountExpiredException(""); //만료됐다는 에러를 발생시키고 아래에서 처리함
+                }
                 //권한 부여
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(memberEmail,null, List.of(new SimpleGrantedAuthority("USER")));
@@ -84,6 +93,8 @@ public class JwtFilter extends OncePerRequestFilter {
             request.setAttribute("exception", JwtErrorCode.TOKEN_SIGNATURE_ERROR.name());
         }catch(MalformedJwtException e){
             request.setAttribute("exception", JwtErrorCode.TOKEN_NOT_CORRECT.name());
+        }catch(AccountExpiredException e){
+            request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name()); //토큰 만료와 같은 에러를 던져줌
         }
         catch (Exception e){
             log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());

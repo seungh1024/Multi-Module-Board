@@ -11,9 +11,10 @@ package com.seungh1024.controller;
 import com.seungh1024.Response;
 import com.seungh1024.application.AuthApplication;
 import com.seungh1024.dto.MemberDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,10 +46,25 @@ public class AuthController {
     //로그인
     @PostMapping("/signin")
     public Response<?> signin(@RequestBody @Valid MemberDto.LoginForm memberDto){
-        String accessToken = authApplication.signin(memberDto);
-        HashMap<String,String> token = new HashMap<>();
-        token.put("accessToken",accessToken);
-        return success(token);
+        HashMap<String,String> data = authApplication.signin(memberDto);
+        return success(data);
+    }
+
+    //refreshToken을 헤더에 넣어서 보내고 유효하면 accessToken발급
+    @GetMapping("/refresh")
+    public Response<?> refreshToken(HttpServletRequest request){
+        String refreshToken = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        HashMap<String,String> accessToken = new HashMap<>();
+        accessToken.put("accessToken",authApplication.refreshAccessToken(refreshToken));
+        return success(accessToken);
+    }
+
+    // 로그아웃
+    @GetMapping("/signout")
+    public Response<?> signOut(HttpServletRequest request){
+        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        authApplication.signOut(accessToken);
+        return success();
     }
 
     //security test
@@ -57,6 +73,8 @@ public class AuthController {
         String memberEmail = authentication.getName();
         return success(memberEmail + " Authentication에서 인증된 이메일 꺼내오기!");
     }
+
+
 
 
 }

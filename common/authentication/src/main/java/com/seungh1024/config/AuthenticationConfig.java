@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,6 +32,7 @@ public class AuthenticationConfig {
     @Value("${jwt.secret}")
     private String jwtSecret;
     private final JwtUtil jwtUtil;
+    private final StringRedisTemplate redisTemplate;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -39,7 +41,7 @@ public class AuthenticationConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/signup","/api/v1/auth/signin").permitAll()
+                .requestMatchers("/api/v1/auth/signup","/api/v1/auth/signin", "/api/v1/auth/refresh").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -56,7 +58,7 @@ public class AuthenticationConfig {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAccessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtFilter(jwtSecret,jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtSecret,jwtUtil,redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
