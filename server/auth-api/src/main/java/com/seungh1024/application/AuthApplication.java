@@ -7,8 +7,10 @@ import com.seungh1024.repository.LoginTokenRepository;
 import com.seungh1024.repository.MemberRepository;
 import com.seungh1024.service.AuthService;
 import com.seungh1024.utils.JwtUtil;
+import io.netty.util.Timeout;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 /*
@@ -34,6 +37,7 @@ public class AuthApplication {
     private final MemberRepository memberRepository;
     private final LoginTokenRepository loginTokenRepository;
     private final JwtUtil jwtUtil;
+    private final StringRedisTemplate redisTemplate;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -76,7 +80,6 @@ public class AuthApplication {
         }
         String memberEmail = jwtUtil.getMemberEmail(refreshToken,jwtSecret);
 
-        //TODO 로그인 보안 추가 로직, 다 통과하면 accessToken 발급
         String accessToken = loginTokenDto.get().getAccessToken();
         String newAccessToken = null;
         try{
@@ -86,10 +89,15 @@ public class AuthApplication {
                 loginTokenRepository.delete(loginTokenDto.get());
                 //access token도 블랙 리스트로 등록한다. 사용자 이메일을 key값으로 등록해서 사용
                 long remainingTime = jwtUtil.getExpired(accessToken,jwtSecret).getTime() - System.currentTimeMillis();
-                LoginTokenDto blackList = new LoginTokenDto(accessToken, null,remainingTime/1000);
-                loginTokenRepository.save(blackList);
+//                LoginTokenDto blackList = new LoginTokenDto(accessToken, null,remainingTime/1000);
+
+                //access token 하나 저장하는데 hashMap 저장하는게 너무 비효율 같아 template이용
+                redisTemplate.opsForValue().set(accessToken,accessToken,remainingTime, TimeUnit.MILLISECONDS);
+
+//                loginTokenRepository.save(blackList);
             }
         }catch(Exception e){
+            e.printStackTrace();
             // access token이 만료되었으면 정상적으로 발급 진행
             newAccessToken = jwtUtil.createAccessJwt(memberEmail,jwtSecret,accessExpired);
             // accessToken만 업데이트 진행

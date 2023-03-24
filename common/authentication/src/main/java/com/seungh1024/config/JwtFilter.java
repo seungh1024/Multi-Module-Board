@@ -65,14 +65,15 @@ public class JwtFilter extends OncePerRequestFilter {
         // "Bearer {token}" 형식이기 때문에 공백으로 split 후 1번째걸 가져와야 token을 가져옴!
         String token = authorization.split(" ")[1];
 
-        final HashOperations<String, Object, Object> valueOperations = redisTemplate.opsForHash();
         // Token expired 여부
         try{
             //유효한 토큰인 경우
             if(!jwtUtil.isExpired(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
                 String memberEmail = jwtUtil.getMemberEmail(token,jwtSecret);
-                String blackListToken = (String)valueOperations.get("refreshToken:"+token,"id");
+                String blackListToken = redisTemplate.opsForValue().get(token);
+
+//                String blackListToken = (String)valueOperations.get("refreshToken:"+token,"id");
                 // 블랙 리스트 토큰이 존재하고, 해당 사용자 이름으로 등록된 토큰과 요청한 토큰이 같다면 예외 발생
                 if(blackListToken != null && blackListToken.equals(token)){
                     throw new AccountExpiredException(""); //만료됐다는 에러를 발생시키고 아래에서 처리함
