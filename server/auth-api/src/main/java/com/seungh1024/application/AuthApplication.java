@@ -66,9 +66,8 @@ public class AuthApplication {
         tokens.put("accessToken",accessToken);
         tokens.put("refreshToken",refreshToken);
 
+        LoginTokenDto loginTokenDto = LoginTokenDto.createAccessRefreshToken(refreshToken,accessToken,refreshExpired);
 
-        LoginTokenDto loginTokenDto = LoginTokenDto.createAcessRefreshToken(refreshToken,accessToken,refreshExpired);
-        loginTokenRepository.save(loginTokenDto);
         return tokens;
     }
 

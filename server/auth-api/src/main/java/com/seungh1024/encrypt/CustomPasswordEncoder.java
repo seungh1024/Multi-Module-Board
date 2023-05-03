@@ -53,7 +53,6 @@ public class CustomPasswordEncoder implements SeunghPasswordEncoder, RandomSalt,
     @Override
     public Boolean isCorrectPassword(String inputPassword, String memberPassword, String salt){
         String encryptedPassword = encryptPassword(inputPassword, salt);
-        System.out.println(encryptedPassword);
         return encryptedPassword.equals(memberPassword);
     }
 }

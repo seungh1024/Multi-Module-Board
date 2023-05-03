@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "member")
 @Getter
-//@NoArgsConstructor
-//@Builder
 public class Member {
     @Id
     @Column(name = "member_id")
