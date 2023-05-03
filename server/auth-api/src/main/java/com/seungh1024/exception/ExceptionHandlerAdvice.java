@@ -11,9 +11,10 @@ import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
 import com.seungh1024.exception.custom.DuplicateMemberException;
+import com.seungh1024.exception.custom.EncryptException;
 import com.seungh1024.exception.custom.RestApiException;
+import com.seungh1024.exception.encrypt.EncryptErrorCode;
 import com.seungh1024.exception.member.MemberErrorCode;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.security.NoSuchAlgorithmException;
 
 /*
  * Exception Handler
@@ -115,6 +118,15 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleAccountExpiredException(AccountExpiredException e){
         log.error("[AccountExpiredException] cause : {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.ACCOUNT_EXPIRED_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),e.getMessage()+errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(EncryptException.class)
+    public ResponseEntity handleNoSuchAlgorithmException(NoSuchAlgorithmException e){
+        log.error("[NoSuchAlgorithmException] cause : {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = EncryptErrorCode.Algorithm_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),e.getMessage()+errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }

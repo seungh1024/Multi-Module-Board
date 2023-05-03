@@ -1,13 +1,14 @@
 package com.seungh1024.application;
 
-import com.seungh1024.dto.MemberDto;
+import com.seungh1024.dto.MemberReqDto;
+import com.seungh1024.encrypt.PasswordChecker;
+import com.seungh1024.encrypt.SeunghPasswordEncoder;
 import com.seungh1024.member.Member;
 import com.seungh1024.redis.LoginTokenDto;
 import com.seungh1024.repository.LoginTokenRepository;
 import com.seungh1024.repository.MemberRepository;
 import com.seungh1024.service.AuthService;
 import com.seungh1024.utils.JwtUtil;
-import io.netty.util.Timeout;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,7 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -38,26 +38,27 @@ public class AuthApplication {
     private final LoginTokenRepository loginTokenRepository;
     private final JwtUtil jwtUtil;
     private final StringRedisTemplate redisTemplate;
+    private final PasswordChecker passwordChecker;
 
     @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final String jwtSecret;
     @Value("${jwt.accessExpired}")
     private long accessExpired;
     @Value("${jwt.refreshExpired}")
     private long refreshExpired;
 
-    public void signup(MemberDto.JoinForm memberDto){
+    public void signup(MemberReqDto.JoinForm memberDto){
         authService.signup(memberDto);
     }
 
     // Login
-    public HashMap<String,String> signin(MemberDto.LoginForm memberDto) {
+    public HashMap<String,String> signin(MemberReqDto.LoginForm memberDto) {
         String memberEmail = memberDto.getMemberEmail();
 
         Member member = memberRepository.findMemberByMemberEmail(memberEmail);
         if(member == null) throw new UsernameNotFoundException(memberEmail);
-        if (!memberDto.getMemberPassword().equals(member.getMemberPassword())) throw new BadCredentialsException("");
-
+//        if (!memberDto.getMemberPassword().equals(member.getMemberPassword())) throw new BadCredentialsException("");
+        if(!passwordChecker.isCorrectPassword(memberDto.getMemberPassword(),member.getMemberPassword(),member.getMemberSalt())) throw new BadCredentialsException("");
 
         HashMap<String,String> tokens = new HashMap<>();
         String accessToken = jwtUtil.createAccessJwt(memberEmail,jwtSecret,accessExpired);
@@ -66,7 +67,7 @@ public class AuthApplication {
         tokens.put("refreshToken",refreshToken);
 
 
-        LoginTokenDto loginTokenDto =  new LoginTokenDto(refreshToken,accessToken,refreshExpired/1000);
+        LoginTokenDto loginTokenDto = LoginTokenDto.createAcessRefreshToken(refreshToken,accessToken,refreshExpired);
         loginTokenRepository.save(loginTokenDto);
         return tokens;
     }
@@ -94,7 +95,6 @@ public class AuthApplication {
                 //access token 하나 저장하는데 hashMap 저장하는게 너무 비효율 같아 template이용
                 redisTemplate.opsForValue().set(accessToken,accessToken,remainingTime, TimeUnit.MILLISECONDS);
 
-//                loginTokenRepository.save(blackList);
             }
         }catch(Exception e){
             e.printStackTrace();

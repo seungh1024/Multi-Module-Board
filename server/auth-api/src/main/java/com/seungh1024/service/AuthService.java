@@ -1,6 +1,9 @@
 package com.seungh1024.service;
 
-import com.seungh1024.dto.MemberDto;
+import com.seungh1024.dto.MemberReqDto;
+import com.seungh1024.encrypt.CustomPasswordEncoder;
+import com.seungh1024.encrypt.RandomSalt;
+import com.seungh1024.encrypt.SeunghPasswordEncoder;
 import com.seungh1024.exception.custom.DuplicateMemberException;
 import com.seungh1024.member.Member;
 import com.seungh1024.member.MemberInfo;
@@ -8,6 +11,7 @@ import com.seungh1024.repository.MemberInfoRepository;
 import com.seungh1024.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /*
@@ -21,9 +25,11 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final MemberInfoRepository memberInfoRepository;
+    private final SeunghPasswordEncoder seunghPasswordEncoder;
+    private final RandomSalt randomSalt;
 
     @Transactional
-    public void signup(MemberDto.JoinForm memberDto){
+    public void signup(MemberReqDto.JoinForm memberDto){
         String memberEmail = memberDto.getMemberEmail();
         String memberPassword = memberDto.getMemberPassword();
         String memberName = memberDto.getMemberName();
@@ -34,18 +40,25 @@ public class AuthService {
             throw new DuplicateMemberException(memberEmail);
         }
 
-        MemberInfo memberInfo = MemberInfo.builder()
-                .memberAge(memberAge)
-                .build();
+        String salt = randomSalt.getSalt();
+        String encodedPassword = seunghPasswordEncoder.encryptPassword(memberPassword,salt);
+
+//        MemberInfo memberInfo = MemberInfo.builder()
+//                .memberAge(memberAge)
+//                .build();
+        MemberInfo memberInfo = MemberInfo.createMemberInfo(memberAge);
 
         memberInfoRepository.save(memberInfo);
 
-        Member newMember = Member.builder()
-                .memberEmail(memberEmail)
-                .memberPassword(memberPassword)
-                .memberName(memberName)
-                .memberInfo(memberInfo)
-                .build();
-        memberRepository.save(newMember);
+
+//        Member newMember = Member.builder()
+//                .memberEmail(memberEmail)
+//                .memberPassword(memberPassword)
+//                .memberName(memberName)
+//                .memberInfo(memberInfo)
+//                .build();
+//        memberRepository.save(newMember);
+
+        memberRepository.save(Member.createMember(memberEmail,encodedPassword,memberName,salt,memberInfo));
     }
 }

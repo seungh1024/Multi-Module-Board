@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -67,7 +66,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Token expired 여부
         try{
-            //유효한 토큰인 경우
             if(!jwtUtil.isExpired(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
                 String memberEmail = jwtUtil.getMemberEmail(token,jwtSecret);
@@ -88,6 +86,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 // AuthenticationManager에 등록하는 과정이다.
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+            //유효한 토큰인 경우
         }catch(ExpiredJwtException e){
             request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name());
         }catch(SignatureException e) {
@@ -96,8 +95,7 @@ public class JwtFilter extends OncePerRequestFilter {
             request.setAttribute("exception", JwtErrorCode.TOKEN_NOT_CORRECT.name());
         }catch(AccountExpiredException e){
             request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name()); //토큰 만료와 같은 에러를 던져줌
-        }
-        catch (Exception e){
+        }catch (Exception e){
             log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
             e.printStackTrace();
         }

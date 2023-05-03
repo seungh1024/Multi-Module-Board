@@ -48,7 +48,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean isExpired(String token,String jwtSecret){
+    public boolean isExpired(String token,String jwtSecret) {
         //before()로 현재 시간을 넣어줘서 만료 기한이 현재 시간 전이면 만료된 것!. before() 가 true면 만료된 것이다.
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
                 .getBody().getExpiration().before(new Date());

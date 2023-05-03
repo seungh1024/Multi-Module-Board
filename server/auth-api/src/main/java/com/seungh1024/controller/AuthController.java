@@ -10,7 +10,7 @@ package com.seungh1024.controller;
 
 import com.seungh1024.Response;
 import com.seungh1024.application.AuthApplication;
-import com.seungh1024.dto.MemberDto;
+import com.seungh1024.dto.MemberReqDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +38,14 @@ public class AuthController {
 
     //회원 가입
     @PostMapping("/signup")
-    public Response<?> signup(@RequestBody @Valid MemberDto.JoinForm memberDto){
+    public Response<?> signup(@RequestBody @Valid MemberReqDto.JoinForm memberDto){
         authApplication.signup(memberDto);
         return success("회원 가입 성공");
     }
 
     //로그인
     @PostMapping("/signin")
-    public Response<?> signin(@RequestBody @Valid MemberDto.LoginForm memberDto){
+    public Response<?> signin(@RequestBody @Valid MemberReqDto.LoginForm memberDto){
         HashMap<String,String> data = authApplication.signin(memberDto);
         return success(data);
     }

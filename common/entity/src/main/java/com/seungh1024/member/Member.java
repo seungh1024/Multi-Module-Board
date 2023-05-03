@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "member")
 @Getter
-@NoArgsConstructor
+//@NoArgsConstructor
+//@Builder
 public class Member {
     @Id
     @Column(name = "member_id")
@@ -32,19 +33,27 @@ public class Member {
     @Column(name = "member_name")
     private String memberName;
 
+    @Column(name = "member_salt")
+    private String memberSalt;
+
     //상세 정보와 1:1 매핑
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "info_id")
     private MemberInfo memberInfo;
 
+    protected Member(){};
 
-    @Builder
-    public Member(int memberId, String memberEmail, String memberPassword, String memberName, MemberInfo memberInfo){
-        this.memberId = memberId;
+//    @Builder
+    private Member(String memberEmail, String memberPassword, String memberName,String memberSalt, MemberInfo memberInfo){
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
+        this.memberSalt = memberSalt;
         this.memberInfo = memberInfo;
+    }
+
+    public static Member createMember(String memberEmail, String memberPassword, String memberName, String memberSalt, MemberInfo memberInfo){
+        return new Member(memberEmail,memberPassword,memberName,memberSalt,memberInfo);
     }
 
     public void updatePassword(String memberPassword){

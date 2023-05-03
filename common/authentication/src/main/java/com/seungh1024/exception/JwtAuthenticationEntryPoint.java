@@ -2,9 +2,11 @@ package com.seungh1024.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seungh1024.ErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

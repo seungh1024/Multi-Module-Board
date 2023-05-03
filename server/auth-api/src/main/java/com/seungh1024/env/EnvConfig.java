@@ -1,5 +1,6 @@
 package com.seungh1024.env;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -14,4 +15,8 @@ import org.springframework.context.annotation.PropertySources;
 @Configuration
 @PropertySource("classpath:properties/env.properties")
 public class EnvConfig {
+    @Bean
+    public String TestBean(){
+        return "test";
+    }
 }

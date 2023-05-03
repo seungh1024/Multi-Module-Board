@@ -4,7 +4,7 @@ public enum ResponseType{
     SUCCESS(200),
     FAILURE(400);
 
-    private int code;
+    private final int code;
 
     ResponseType(int code){
         this.code = code;

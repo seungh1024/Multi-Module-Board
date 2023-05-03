@@ -23,8 +23,12 @@ public class MemberInfo {
     @Column(name = "member_age")
     private int memberAge;
 
-    @Builder
-    public MemberInfo(int memberAge){
+
+    private MemberInfo(int memberAge){
         this.memberAge = memberAge;
+    }
+
+    public static MemberInfo createMemberInfo(int memberAge){
+        return new MemberInfo(memberAge);
     }
 }
