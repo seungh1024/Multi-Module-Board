@@ -9,7 +9,7 @@ package com.seungh1024.controller;
 * */
 
 import com.seungh1024.Response;
-import com.seungh1024.application.AuthApplication;
+import com.seungh1024.application.AuthApplicationImpl;
 import com.seungh1024.dto.MemberReqDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ import static com.seungh1024.Response.success;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    private final AuthApplication authApplication;
+    private final AuthApplicationImpl authApplication;
 
     //회원 가입
     @PostMapping("/signup")

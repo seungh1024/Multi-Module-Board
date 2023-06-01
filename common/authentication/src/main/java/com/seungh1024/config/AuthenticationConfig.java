@@ -2,7 +2,7 @@ package com.seungh1024.config;
 
 import com.seungh1024.exception.JwtAccessDeniedHandler;
 import com.seungh1024.exception.JwtAuthenticationEntryPoint;
-import com.seungh1024.utils.JwtUtil;
+import com.seungh1024.utils.JwtUtilImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationConfig {
     @Value("${jwt.secret}")
     private String jwtSecret;
-    private final JwtUtil jwtUtil;
+    private final JwtUtilImpl jwtUtil;
     private final StringRedisTemplate redisTemplate;
 
     @Bean

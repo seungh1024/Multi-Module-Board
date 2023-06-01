@@ -1,7 +1,7 @@
 package com.seungh1024.config;
 
 import com.seungh1024.exception.JwtErrorCode;
-import com.seungh1024.utils.JwtUtil;
+import com.seungh1024.utils.JwtUtilImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -44,7 +44,7 @@ import java.util.List;
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private String jwtSecret;
-    private JwtUtil jwtUtil;
+    private JwtUtilImpl jwtUtil;
     private StringRedisTemplate redisTemplate;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -66,9 +66,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Token expired 여부
         try{
-            if(!jwtUtil.isExpired(token,jwtSecret)){
+            if(!jwtUtil.isExpiredJwt(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
-                String memberEmail = jwtUtil.getMemberEmail(token,jwtSecret);
+                String memberEmail = jwtUtil.getMemberEmailJwt(token,jwtSecret);
                 String blackListToken = redisTemplate.opsForValue().get(token);
 
 //                String blackListToken = (String)valueOperations.get("refreshToken:"+token,"id");
