@@ -41,22 +41,11 @@ public class AuthServiceImpl implements AuthService{
         String salt = randomSalt.getSalt();
         String encodedPassword = seunghPasswordEncoder.encryptPassword(memberPassword,salt);
 
-//        MemberInfo memberInfo = MemberInfo.builder()
-//                .memberAge(memberAge)
-//                .build();
+
         MemberInfo memberInfo = MemberInfo.createMemberInfo(memberAge);
+        Member saveMember = Member.createMember(memberEmail,encodedPassword,memberName,salt, memberInfo);
+        memberRepository.save(saveMember);
 
-        memberInfoRepository.save(memberInfo);
 
-
-//        Member newMember = Member.builder()
-//                .memberEmail(memberEmail)
-//                .memberPassword(memberPassword)
-//                .memberName(memberName)
-//                .memberInfo(memberInfo)
-//                .build();
-//        memberRepository.save(newMember);
-
-        memberRepository.save(Member.createMember(memberEmail,encodedPassword,memberName,salt,memberInfo));
     }
 }
