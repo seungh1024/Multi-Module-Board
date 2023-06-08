@@ -11,7 +11,7 @@ import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
 import com.seungh1024.exception.custom.DuplicateMemberException;
-import com.seungh1024.exception.custom.EncryptException;
+import com.seungh1024.encrypt.EncryptException;
 import com.seungh1024.exception.custom.RestApiException;
 import com.seungh1024.exception.encrypt.EncryptErrorCode;
 import com.seungh1024.exception.member.MemberErrorCode;

@@ -6,7 +6,6 @@ import com.seungh1024.encrypt.SeunghPasswordEncoder;
 import com.seungh1024.exception.custom.DuplicateMemberException;
 import com.seungh1024.member.Member;
 import com.seungh1024.member.MemberInfo;
-import com.seungh1024.repository.MemberInfoRepository;
 import com.seungh1024.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
     private final MemberRepository memberRepository;
-    private final MemberInfoRepository memberInfoRepository;
     private final SeunghPasswordEncoder seunghPasswordEncoder;
     private final RandomSalt randomSalt;
 

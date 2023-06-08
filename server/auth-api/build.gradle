@@ -10,6 +10,7 @@ dependencies {
     implementation project(':common-entity')
     implementation project(':common-authentication')
     implementation project(':common-exception')
+    implementation project(':common-encrypt')
 
     runtimeOnly 'mysql:mysql-connector-java' //MySQL
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA

@@ -4,9 +4,17 @@ bootJar{
 jar{
     enabled = false
 }
+
 dependencies {
     implementation project(':common-response')
+    implementation project(':common-exception')
+    implementation project(':common-entity')
+    implementation project(':common-authentication')
+    implementation project(':common-encrypt')
+
     runtimeOnly 'mysql:mysql-connector-java' //MySQL
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA
     implementation 'org.springframework.boot:spring-boot-starter-validation' //@Valid
+    implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis' //Redis
 }

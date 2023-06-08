@@ -2,6 +2,7 @@ package com.seungh1024.member;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /*
@@ -14,14 +15,18 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class MemberInfo {
     @Id
     @Column(name = "info_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int infoId;
+    private Long infoId;
 
     @Column(name = "member_age")
-    private int memberAge;
+    private Integer memberAge;
+
+    @OneToOne(mappedBy = "memberInfo")
+    private Member member;
 
 
     private MemberInfo(int memberAge){
@@ -31,4 +36,6 @@ public class MemberInfo {
     public static MemberInfo createMemberInfo(int memberAge){
         return new MemberInfo(memberAge);
     }
+
+    public void updateAge(int memberAge){this.memberAge = memberAge; }
 }

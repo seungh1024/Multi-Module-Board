@@ -1,12 +1,18 @@
 package com.seungh1024.encrypt;
 
-import com.seungh1024.exception.custom.EncryptException;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/*
+ *  비밀번호 인코딩, 랜덤 문자열, 비밀번호 확인 구현클래스
+ *
+ *  @Author 강승훈
+ *  @Since 2023.06.07
+ *
+ * */
 @Component
 public class CustomPasswordEncoder implements SeunghPasswordEncoder, RandomSalt, PasswordChecker{
     @Override

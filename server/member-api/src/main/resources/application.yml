@@ -21,6 +21,12 @@ spring:
         highlight_sql: true
     defer-datasource-initialization: true
 
+  data:
+    redis:
+      host: ${redis.host}
+      port: ${redis.port}
+      password: ${redis.password}
+
 logging:
   level:
     com.seungh1024: error

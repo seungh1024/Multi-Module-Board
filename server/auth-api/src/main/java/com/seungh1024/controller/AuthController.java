@@ -1,12 +1,6 @@
 package com.seungh1024.controller;
 
 
-/*
-* 회원가입, 로그인 클래스
-*
-* @Author 강승훈
-* @Since 2023.03.20
-* */
 
 import com.seungh1024.Response;
 import com.seungh1024.application.AuthApplicationImpl;

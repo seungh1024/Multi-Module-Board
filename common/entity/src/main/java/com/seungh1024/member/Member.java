@@ -20,7 +20,7 @@ public class Member {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int memberId;
+    private Long memberId;
 
     @Column(name = "member_email", unique = true)
     private String memberEmail;
@@ -35,14 +35,12 @@ public class Member {
     private String memberSalt;
 
     //상세 정보와 1:1 매핑
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "info_id")
     private MemberInfo memberInfo;
 
-    protected Member(){};
 
-//    @Builder
-    private Member(String memberEmail, String memberPassword, String memberName,String memberSalt, MemberInfo memberInfo){
+    private Member(String memberEmail, String memberPassword, String memberName,String memberSalt,MemberInfo memberInfo){
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -50,11 +48,25 @@ public class Member {
         this.memberInfo = memberInfo;
     }
 
+    public Member() {} //spring jpa 사용하려면 기본 생성자가 public으로 있어야 함. 나는 다른 생성자를 private으로 해서 기본 생성자를 이렇게 만들어줘야 함.
+
     public static Member createMember(String memberEmail, String memberPassword, String memberName, String memberSalt, MemberInfo memberInfo){
-        return new Member(memberEmail,memberPassword,memberName,memberSalt,memberInfo);
+        return new Member(memberEmail,memberPassword,memberName,memberSalt, memberInfo);
     }
 
-    public void updatePassword(String memberPassword){
-        this.memberPassword = memberPassword;
+    //TODO 회원 상세 정보 업데이트 메소드
+
+
+    public void updatePassword(String memberPassword, String salt){
+        if(memberPassword != null) {
+            this.memberPassword = memberPassword;
+            this.memberSalt = salt;
+        }
+    }
+    public void updateName(String memberName){
+        if(memberName != null) this.memberName = memberName;
+    }
+    public void updateAge(Integer memberAge){
+        if(memberAge != null) this.memberInfo.updateAge(memberAge);
     }
 }
