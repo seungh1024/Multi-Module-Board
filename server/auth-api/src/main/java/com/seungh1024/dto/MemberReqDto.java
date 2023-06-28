@@ -25,16 +25,16 @@ public class MemberReqDto {
         @Email
         @NotBlank
         @Size(max = 50, message = "아이디는 50자 이하로 작성해야 합니다.")
-        public final String memberEmail;
+        private final String memberEmail;
         @NotBlank
         @Size(min = 8, max = 20, message = "비밀번호는 최소 8이상 20이하로 설정해야 합니다.")
-        public final String memberPassword;
+        private final String memberPassword;
         @NotBlank
         @Size(max = 20, message = "이름은 20자 이하로 작성해야 합니다.")
-        public final String memberName;
+        private final String memberName;
         @Nullable
         @Max(value = 150 , message = "나이가 150을 넘을 순 없습니다")
-        public final int memberAge;
+        private final int memberAge;
     }
 
     @Getter

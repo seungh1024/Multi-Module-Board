@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * */
 @SpringBootApplication
 @EnableJpaAuditing // Spring Data JPA가 Auditing 사용하게 해주는 어노테이션
-public class BoardApiApplication {
+public class PostApiApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BoardApiApplication.class,args);
+        SpringApplication.run(PostApiApplication.class,args);
     }
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  * custom rest api exception
  *
  * @Author 강승훈
- * @Since 2023.03.20
+ * @Since 2023.06.27
  *
  * */
 

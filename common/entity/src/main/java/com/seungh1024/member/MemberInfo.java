@@ -14,13 +14,14 @@ import lombok.NoArgsConstructor;
 * */
 
 @Entity
+@Table(name = "member_info")
 @NoArgsConstructor
 @Getter
 public class MemberInfo {
     @Id
     @Column(name = "info_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long infoId;
+    private Long memberInfoId;
 
     @Column(name = "member_age")
     private Integer memberAge;
