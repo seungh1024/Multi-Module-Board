@@ -11,7 +11,7 @@ import com.seungh1024.dto.MemberReqDto;
  *
  * */
 public interface MemberInfoApplication {
-    MemberInfoDto getMemberInfo(String memberEmail);
+    MemberInfoDto getMemberInfo(Long memberId);
 
-    void updateMemberInfo(MemberReqDto.InfoDto memberReqDto, String memberEmail);
+    void updateMemberInfo(MemberReqDto.InfoDto memberReqDto, Long memberId);
 }

@@ -29,12 +29,14 @@ public class MemberInfoController {
 
     @GetMapping("/info")
     public Response<?> memberInfo(Authentication authentication){
-        return success(memberInfoApplication.getMemberInfo(authentication.getName()));
+        Long memberId = Long.parseLong(authentication.getName());
+        return success(memberInfoApplication.getMemberInfo(memberId));
     }
 
     @PatchMapping("/info") //일부만 업데이트 -> 비밀번호, 나이  -> PATCH 사용
     public Response<?> updateInfo(@RequestBody @Valid MemberReqDto.InfoDto memberDto, Authentication authentication){
-        memberInfoApplication.updateMemberInfo(memberDto, authentication.getName());
+        Long memberId = Long.parseLong(authentication.getName());
+        memberInfoApplication.updateMemberInfo(memberDto, memberId);
         return success();
     }
 }

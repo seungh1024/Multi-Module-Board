@@ -31,9 +31,5 @@ public class PostServiceImpl implements PostService{
         post.updateMember(member);
         postRepository.save(post);
 
-//        Member member = memberRepository.getMemberByMemberEmail(memberEmail);
-//        Member member = memberRepository.getReferenceById((long)1);
-//        post.updateMember(member);
-//        postRepository.save(post);
     }
 }

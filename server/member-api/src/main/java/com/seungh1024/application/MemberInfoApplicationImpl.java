@@ -24,15 +24,15 @@ public class MemberInfoApplicationImpl implements MemberInfoApplication{
     private final RandomSalt randomSalt;
     private final SeunghPasswordEncoder seunghPasswordEncoder;
     @Override
-    public MemberInfoDto getMemberInfo(String memberEmail) {
-        Member member = memberRepository.findMemberByMemberEmail(memberEmail);
+    public MemberInfoDto getMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
         MemberInfoDto memberInfoDto = MemberInfoDto.getAllMemberInfo(member);
         return memberInfoDto;
     }
 
     @Override
-    public void updateMemberInfo(MemberReqDto.InfoDto memberDto, String memberEmail){
-        Member member = memberRepository.findMemberByMemberEmail(memberEmail);
+    public void updateMemberInfo(MemberReqDto.InfoDto memberDto, Long memberId){
+        Member member = memberRepository.findById(memberId).get();
         String salt = randomSalt.getSalt();
         String encodedPassword = seunghPasswordEncoder.encryptPassword(memberDto.getMemberPassword(),salt);
         member.updatePassword( encodedPassword,salt);

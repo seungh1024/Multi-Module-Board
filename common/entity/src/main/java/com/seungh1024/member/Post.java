@@ -46,7 +46,7 @@ public class Post {
 
     // 여러개의 게시글은 각각의 사용자가 있다.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_email")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public Post(){};
