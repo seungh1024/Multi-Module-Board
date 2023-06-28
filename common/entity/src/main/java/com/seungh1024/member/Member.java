@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * 사용자 정보 엔티티 클래스
  *
@@ -17,11 +20,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "member")
 @Getter
 public class Member {
-    @Id
-    @Column(name = "member_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+//    @Id
+//    @Column(name = "member_id")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long memberId;
 
+    @Id
     @Column(name = "member_email", unique = true)
     private String memberEmail;
 
@@ -38,6 +42,10 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "info_id")
     private MemberInfo memberInfo;
+
+    // 사용자는 여러 개의 게시글을 작성할 수 있다.
+    @OneToMany(mappedBy = "postId")
+    private List<Post> posts = new ArrayList<>();
 
 
     private Member(String memberEmail, String memberPassword, String memberName,String memberSalt,MemberInfo memberInfo){
@@ -68,5 +76,9 @@ public class Member {
     }
     public void updateAge(Integer memberAge){
         if(memberAge != null) this.memberInfo.updateAge(memberAge);
+    }
+
+    public void updatePosts(Post post){
+        this.posts.add(post);
     }
 }
