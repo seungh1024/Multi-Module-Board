@@ -11,13 +11,15 @@ import java.util.Date;
  * */
 
 public interface JwtUtil {
-    String createAccessJwt(String memberEmail, String jwtSecret, Long accessExpired);
+    String createAccessJwt(Long memberId,String memberEmail, String jwtSecret, Long accessExpired);
 
-    String createRefreshJwt(String memberEmail, String jwtSecret, Long refreshExpired);
+    String createRefreshJwt(Long memberId, String memberEmail, String jwtSecret, Long refreshExpired);
 
     boolean isExpiredJwt(String token,String jwtSecret);
 
+    Long getMemberId(String token, String jwtSecret);
     String getMemberEmailJwt(String token, String jwtSecret);
 
     Date getExpiredJwt(String token, String jwtSecret);
+
 }

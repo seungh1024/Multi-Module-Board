@@ -63,7 +63,6 @@ public class Post {
 
     public void updateMember(Member member){
         this.member = member;
-        member.updatePosts(this);
     }
 
 }

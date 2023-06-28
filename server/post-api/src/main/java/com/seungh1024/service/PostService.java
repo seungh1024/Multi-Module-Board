@@ -10,5 +10,5 @@ import com.seungh1024.dto.PostDto;
  *
  * */
 public interface PostService {
-    void createPost(PostDto postDto, String memberEmail);
+    void createPost(PostDto postDto, Long memberId);
 }

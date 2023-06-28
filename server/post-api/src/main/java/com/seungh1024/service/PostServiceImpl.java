@@ -22,12 +22,12 @@ public class PostServiceImpl implements PostService{
     private final MemberRepository memberRepository;
 
     @Override
-    public void createPost(PostDto postDto, String memberEmail) {
+    public void createPost(PostDto postDto, Long memberId) {
         String postName = postDto.getPostName();
         String postContent = postDto.getPostContent();
         Post post = Post.createPost(postName, postContent);
 
-        Member member = memberRepository.findMemberByMemberEmail(memberEmail);
+        Member member = memberRepository.getReferenceById(memberId);
         post.updateMember(member);
         postRepository.save(post);
 

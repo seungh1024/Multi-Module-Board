@@ -46,18 +46,20 @@ public class AuthController {
 
     //refreshToken을 헤더에 넣어서 보내고 유효하면 accessToken발급
     @GetMapping("/refresh")
-    public Response<?> refreshToken(HttpServletRequest request){
+    public Response<?> refreshToken(HttpServletRequest request,Authentication authentication){
         String refreshToken = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String memberId = authentication.getName();
         HashMap<String,String> accessToken = new HashMap<>();
-        accessToken.put("accessToken",authApplication.refreshAccessToken(refreshToken));
+        accessToken.put("accessToken",authApplication.refreshAccessToken(refreshToken,memberId));
         return success(accessToken);
     }
 
     // 로그아웃
     @GetMapping("/signout")
-    public Response<?> signOut(HttpServletRequest request){
-        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
-        authApplication.signOut(accessToken);
+    public Response<?> signOut(HttpServletRequest request, Authentication authentication){
+//        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String memberId = authentication.getName();
+        authApplication.signOut(memberId);
         return success();
     }
 

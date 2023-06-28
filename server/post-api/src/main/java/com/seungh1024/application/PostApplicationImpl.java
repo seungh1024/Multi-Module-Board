@@ -19,7 +19,7 @@ public class PostApplicationImpl implements PostApplication{
     private final PostService postService;
 
     @Override
-    public void createPost(PostDto postDto, String memberEmail) {
-        postService.createPost(postDto, memberEmail);
+    public void createPost(PostDto postDto, Long memberId) {
+        postService.createPost(postDto, memberId);
     }
 }

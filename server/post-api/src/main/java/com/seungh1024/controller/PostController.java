@@ -26,8 +26,8 @@ public class PostController {
 
     @PostMapping("/create")
     public Response<?> createPost(@Valid @RequestBody PostDto postDto, Authentication authentication){
-        String memberEmail = authentication.getName();
-        postApplication.createPost(postDto,memberEmail);
+        Long memberId = Long.parseLong(authentication.getName());
+        postApplication.createPost(postDto,memberId);
         return success();
     }
 

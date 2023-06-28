@@ -20,12 +20,11 @@ import java.util.List;
 @Table(name = "member")
 @Getter
 public class Member {
-//    @Id
-//    @Column(name = "member_id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long memberId;
-
     @Id
+    @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long memberId;
+
     @Column(name = "member_email", unique = true)
     private String memberEmail;
 
@@ -78,7 +77,4 @@ public class Member {
         if(memberAge != null) this.memberInfo.updateAge(memberAge);
     }
 
-    public void updatePosts(Post post){
-        this.posts.add(post);
-    }
 }

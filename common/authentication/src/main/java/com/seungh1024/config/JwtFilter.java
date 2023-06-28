@@ -55,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //권한이 없거나 Bearer 형태로 보내지 않으면 block처리
         //권한을 안넣어준 요청,응답 객체를 필터에 넣어줘야함
         if(authorization == null || !authorization.startsWith("Bearer ")){
-            log.error("authorization이 없습니다.");
+//            log.error("authorization이 없습니다.");
             filterChain.doFilter(request,response);
             return;
         }
@@ -68,8 +68,9 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             if(!jwtUtil.isExpiredJwt(token,jwtSecret)){
                 // Token에서 사용자 정보 꺼내기
-                String memberEmail = jwtUtil.getMemberEmailJwt(token,jwtSecret);
-                String blackListToken = redisTemplate.opsForValue().get(token);
+                Long memberId = jwtUtil.getMemberId(token,jwtSecret);
+//                String memberEmail = jwtUtil.getMemberEmailJwt(token,jwtSecret);
+                String blackListToken = redisTemplate.opsForValue().get(memberId+"");
 
 //                String blackListToken = (String)valueOperations.get("refreshToken:"+token,"id");
                 // 블랙 리스트 토큰이 존재하고, 해당 사용자 이름으로 등록된 토큰과 요청한 토큰이 같다면 예외 발생
@@ -78,7 +79,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
                 //권한 부여
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(memberEmail,null, List.of(new SimpleGrantedAuthority("USER")));
+                        new UsernamePasswordAuthenticationToken(memberId,null, List.of(new SimpleGrantedAuthority("USER")));
 
                 // request를 넣어 detail을 빌드하고 추가한다.
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

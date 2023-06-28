@@ -1,7 +1,7 @@
 package com.seungh1024.redis;
 
-import jakarta.persistence.Id;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
@@ -21,13 +21,13 @@ public class LoginTokenDto {
     protected LoginTokenDto(){}; // redis도 jpa 사용하니 기본 생성자가 필요하다.
 
 
-    private LoginTokenDto(String refreshToken, String accessToken, Long expiration){
-        this.id = refreshToken;
+    private LoginTokenDto(String memberId, String accessToken, Long expiration){
+        this.id = memberId;
         this.accessToken = accessToken;
         this.expiration = expiration;
     }
-    public static LoginTokenDto createAccessRefreshToken(String refreshToken, String accessToken, long expiredTime){
-        return new LoginTokenDto(refreshToken,accessToken,expiredTime/1000);
+    public static LoginTokenDto createAccessRefreshToken(String memberId, String accessToken, long expiredTime){
+        return new LoginTokenDto(memberId,accessToken,expiredTime/1000);
     }
 
     public void updateAccessToken(String accessToken){
