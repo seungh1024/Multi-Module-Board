@@ -7,6 +7,7 @@ import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
+import com.seungh1024.repository.post.dto.PostDetailDto;
 import com.seungh1024.repository.post.dto.PostMemberDto;
 import com.seungh1024.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,17 @@ public class PostApplicationImpl implements PostApplication{
     }
 
     @Override
-    public List<PostResDto> getMyPosts(Long memberId) {
-        List<PostResDto> myPosts = postService.getMyPosts(memberId);
-        return myPosts;
+    public Page<PostMemberDto> getMyPosts(Long memberId, Pageable pageable) {
+        return postService.getMyPosts(memberId, pageable);
     }
 
     @Override
     public Page<PostMemberDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
         return postService.searchPosts(condition,pageable);
+    }
+
+    @Override
+    public PostDetailDto getPostDetails(Long memberId, Long postId) {
+        return postService.getPostDetails(memberId, postId);
     }
 }

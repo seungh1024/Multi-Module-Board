@@ -7,6 +7,4 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface LoginTokenRepository extends CrudRepository<LoginTokenDto,String> {
-    Optional<LoginTokenDto> findLoginTokenDtoByAccessToken(String accessToken); // acceessToken으로 정보 추출
-
 }

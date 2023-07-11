@@ -5,6 +5,7 @@ import com.seungh1024.application.PostApplication;
 import com.seungh1024.dto.PostDto;
 import com.seungh1024.dto.PostResDto;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
+import com.seungh1024.repository.post.dto.PostMemberDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,24 +40,23 @@ public class PostController {
 
     // 내 게시물 리스트
     @GetMapping("/my-post")
-    public Response<?> getMyPosts(@AuthenticationPrincipal Long memberId){
-        List<PostResDto> myPosts = postApplication.getMyPosts(memberId);
-        return success(myPosts);
-    }
-
-    // 선택한 게시물
-    @GetMapping("/{postNumber}")
-    public Response<?> getPost(){
-        return success();
+    public Response<?> getMyPosts(@AuthenticationPrincipal Long memberId, Pageable pageable){
+        return success(postApplication.getMyPosts(memberId, pageable));
     }
 
     // 게시글 검색
     @GetMapping("/search")
-    public Page<?> getSearchPosts(PostSearchConditionDto condition, Pageable pageable){
-        return postApplication.searchPosts(condition,pageable);
+    public Response<?> getSearchPosts(PostSearchConditionDto condition, Pageable pageable){
+        return success(postApplication.searchPosts(condition,pageable));
     }
 
-    //게시글 수정. 내 것만 가능
+    //산텍힌 게시물 하나
+    @GetMapping("/detail")
+    public Response<?> getPost(@AuthenticationPrincipal Long memberId, Long postId){
+        return success(postApplication.getPostDetails(memberId, postId));
+    }
+
+    //게시글 수정. 내 것만 가능하도록
     @PatchMapping()
     public Response<?> updatePosts(){
         return success();

@@ -5,7 +5,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.seungh1024.repository.post.dto.PostMemberDto;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformationSuppo
 import org.springframework.data.jpa.repository.support.Querydsl;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
-
-import java.util.List;
-import java.util.function.Function;
 
 /*
  * querydsl support 클래스
@@ -30,7 +26,6 @@ import java.util.function.Function;
  * @Since 2023.07.11
  *
  * */
-//@Repository
 public class QuerydslSupport {
     private final Class domainClass;
     private Querydsl querydsl;
@@ -75,6 +70,9 @@ public class QuerydslSupport {
 
     protected  <T> JPAQuery<T> selectFrom(EntityPath<T> from){
         return getQueryFactory().selectFrom(from);
+    }
+    protected <T> JPAUpdateClause update(EntityPath<T> update){
+        return getQueryFactory().update(update);
     }
 
     protected <T> Page<T> applyPagination(Pageable pageable, JPAQuery contentQuery, JPAQuery<Long> countQuery){

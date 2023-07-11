@@ -6,6 +6,7 @@ import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
+import com.seungh1024.repository.post.dto.PostDetailDto;
 import com.seungh1024.repository.post.dto.PostMemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,19 +32,20 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public List<PostResDto> getMyPosts(Long memberId) {
-        List<Post> posts = postRepository.findPostByMember_MemberId(memberId);
-        Member member = memberRepository.findById(memberId).get();
-        String memberName = member.getMemberName();
-        PostResDto postResDto = PostResDto.builder().build();
-        List<PostResDto> myPosts = postResDto.entityToDto(posts,memberName);
-
-        return myPosts;
+    public Page<PostMemberDto> getMyPosts(Long memberId, Pageable pageable) {
+        return postRepository.getMyPosts(memberId,pageable);
     }
 
     @Override
     @Transactional
     public Page<PostMemberDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
-        return postRepository.getPostList(condition, pageable);
+        return postRepository.searchPosts(condition, pageable);
+    }
+
+    @Override
+    @Transactional
+    public PostDetailDto getPostDetails(Long memberId, Long postId) {
+        postRepository.increaseViews(memberId,postId);
+        return postRepository.getPostDetails(postId);
     }
 }
