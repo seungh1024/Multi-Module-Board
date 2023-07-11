@@ -1,7 +1,6 @@
-package com.seungh1024.member;
+package com.seungh1024.entity.member;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

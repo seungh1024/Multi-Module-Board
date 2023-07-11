@@ -3,11 +3,17 @@ package com.seungh1024.controller;
 import com.seungh1024.Response;
 import com.seungh1024.application.PostApplication;
 import com.seungh1024.dto.PostDto;
-import com.seungh1024.member.Post;
+import com.seungh1024.dto.PostResDto;
+import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.seungh1024.Response.success;
 
@@ -33,9 +39,9 @@ public class PostController {
 
     // 내 게시물 리스트
     @GetMapping("/my-post")
-    public Response<?> getMyPosts(){
-        Post myPost = new Post();
-        return success(myPost);
+    public Response<?> getMyPosts(@AuthenticationPrincipal Long memberId){
+        List<PostResDto> myPosts = postApplication.getMyPosts(memberId);
+        return success(myPosts);
     }
 
     // 선택한 게시물
@@ -44,9 +50,15 @@ public class PostController {
         return success();
     }
 
-    // 게시글 제목으로 검색한 게시물 리스트
-    @GetMapping()
-    public Response<?> getSearchPosts(){
+    // 게시글 검색
+    @GetMapping("/search")
+    public Page<?> getSearchPosts(PostSearchConditionDto condition, Pageable pageable){
+        return postApplication.searchPosts(condition,pageable);
+    }
+
+    //게시글 수정. 내 것만 가능
+    @PatchMapping()
+    public Response<?> updatePosts(){
         return success();
     }
 }

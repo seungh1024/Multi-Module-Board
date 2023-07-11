@@ -1,6 +1,6 @@
 package com.seungh1024.dto;
 
-import com.seungh1024.member.Member;
+import com.seungh1024.entity.member.Member;
 
 /*
  * 회원 응답 정보 DTo

@@ -1,3 +1,19 @@
+plugins{
+    //querydsl 추가
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA
+
+
+//    querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis' //Redis
+
+}
+clean {
+    delete file('src/main/generated')
 }

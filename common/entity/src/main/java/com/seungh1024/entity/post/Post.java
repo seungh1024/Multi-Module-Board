@@ -1,4 +1,4 @@
-package com.seungh1024.member;
+package com.seungh1024.entity.post;
 /*
  * 게시글 Entity
  *
@@ -7,20 +7,30 @@ package com.seungh1024.member;
  *
  * */
 
+import com.seungh1024.entity.base.BaseEntity;
+import com.seungh1024.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+/*
+ * 게시글 엔티티
+ *
+ * @Author 강승훈
+ * @Since 2023.07.11
+ *
+ * */
 @Entity
 @Table(name = "post")
 @Getter
-@EntityListeners(value = AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @Column(name = "post_id")
@@ -34,15 +44,8 @@ public class Post {
     @Column(name = "post_content")
     private String postContent;
 
-    @CreatedDate // 엔티티 생성 시 자동으로 시간이 들어간다
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false , updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate //엔티티 수정 시 자동으로 시간이 들어간다.
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at", nullable = false , updatable = true, columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
+    @Column(name = "post_views")
+    private Integer postViews = 0;
 
     // 여러개의 게시글은 각각의 사용자가 있다.
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +54,7 @@ public class Post {
 
     public Post(){};
 
-    @Builder
+//    @Builder
     private Post(String postName, String postContent){
         this.postName = postName;
         this.postContent = postContent;
@@ -62,7 +65,9 @@ public class Post {
     }
 
     public void updateMember(Member member){
+
         this.member = member;
+        member.getPosts().add(this);
     }
 
 }

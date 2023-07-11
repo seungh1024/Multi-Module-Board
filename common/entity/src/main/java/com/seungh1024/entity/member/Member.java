@@ -1,9 +1,9 @@
-package com.seungh1024.member;
+package com.seungh1024.entity.member;
 
+import com.seungh1024.entity.base.BaseEntity;
+import com.seungh1024.entity.post.Post;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 @Getter
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

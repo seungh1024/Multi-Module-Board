@@ -5,8 +5,8 @@ import com.seungh1024.dto.MemberInfoDto;
 import com.seungh1024.dto.MemberReqDto;
 import com.seungh1024.encrypt.RandomSalt;
 import com.seungh1024.encrypt.SeunghPasswordEncoder;
-import com.seungh1024.member.Member;
-import com.seungh1024.repository.MemberRepository;
+import com.seungh1024.entity.member.Member;
+import com.seungh1024.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
