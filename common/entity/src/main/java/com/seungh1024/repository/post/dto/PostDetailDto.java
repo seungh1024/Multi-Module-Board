@@ -4,6 +4,13 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+/*
+ * 게시글 상세 정보 DTO(게시글 클릭 후 보이는 정보)
+ *
+ * @Author 강승훈
+ * @Since 2023.07.12
+ *
+ * */
 @Getter
 public class PostDetailDto {
     private final Long postId;
