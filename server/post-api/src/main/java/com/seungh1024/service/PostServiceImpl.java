@@ -27,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
 
 
     @Override
@@ -45,7 +44,10 @@ public class PostServiceImpl implements PostService{
     @Override
     @Transactional
     public PostDetailDto getPostDetails(Long memberId, Long postId) {
-        postRepository.increaseViews(memberId,postId);
-        return postRepository.getPostDetails(postId);
+        Post selectPost = postRepository.getPostDetails(postId);
+        if(selectPost.getMember().getMemberId() != memberId){ // 자신의 게시물이 아니면 조회수 증가
+            selectPost.updateViews();
+        }
+        return selectPost.entityToDto();
     }
 }

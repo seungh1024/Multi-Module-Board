@@ -1,5 +1,6 @@
 package com.seungh1024.repository.post.dto;
 
+import com.seungh1024.entity.post.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -28,4 +29,5 @@ public class PostDetailDto {
         this.createdAt = createdAt;
         this.postContent = postContent;
     }
+
 }

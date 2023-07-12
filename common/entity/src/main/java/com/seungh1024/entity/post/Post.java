@@ -9,14 +9,9 @@ package com.seungh1024.entity.post;
 
 import com.seungh1024.entity.base.BaseEntity;
 import com.seungh1024.entity.member.Member;
+import com.seungh1024.repository.post.dto.PostDetailDto;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -54,6 +49,16 @@ public class Post extends BaseEntity {
 
     public Post(){};
 
+    public Post(Long postId, String postName, String postContent, Integer postViews,LocalDateTime createdAt, Member member){
+        this.postId = postId;
+        this.postName = postName;
+        this.postContent = postContent;
+        this.postViews = postViews;
+
+        this.member = member;
+    }
+
+
 //    @Builder
     private Post(String postName, String postContent){
         this.postName = postName;
@@ -65,9 +70,24 @@ public class Post extends BaseEntity {
     }
 
     public void updateMember(Member member){
-
         this.member = member;
         member.getPosts().add(this);
     }
+
+    public void updateViews(){
+        this.postViews += 1;
+    }
+
+    public PostDetailDto entityToDto(){
+        return new PostDetailDto(
+                this.postId,
+                this.postName,
+                this.member.getMemberName(),
+                this.postViews,
+                this.getCreatedAt(),
+                this.postContent
+        );
+    }
+
 
 }

@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.seungh1024.entity.post.Post;
+import com.seungh1024.entity.post.QPost;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailDto;
 import com.seungh1024.repository.post.dto.PostMemberDto;
@@ -81,7 +82,6 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize()),
 
-
                 select(post.count())
                         .from(post)
                         .leftJoin(post.member, member)
@@ -92,30 +92,12 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
     }
 
     @Override
-    public PostDetailDto getPostDetails(Long postId) {
-        return select(
-                    Projections.constructor(PostDetailDto.class,
-                            post.postId,
-                            post.postName,
-                            member.memberName,
-                            post.postViews,
-                            post.createdAt,
-                            post.postContent)
-                )
+    public Post getPostDetails(Long postId) {
+        return select(post)
                 .from(post)
-                .leftJoin(post.member, member)
+                .leftJoin(post.member, member).fetchJoin()
                 .where(postIdEq(postId))
                 .fetchOne();
-    }
-
-    @Override
-    public void increaseViews(Long memberId, Long postId) {
-        update(post)
-                .set(post.postViews, post.postViews.add(1))
-                .where(
-                        postIdEq(postId),
-                        memberIdEq(memberId).not())
-                .execute();
     }
 
     private BooleanExpression postIdEq(Long postId){
