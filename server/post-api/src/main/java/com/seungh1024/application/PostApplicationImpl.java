@@ -1,11 +1,11 @@
 package com.seungh1024.application;
 
 import com.seungh1024.dto.PostDto;
-import com.seungh1024.dto.PostResDto;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
+import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailDto;
 import com.seungh1024.repository.post.dto.PostMemberDto;
@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /*
  * PostApplicationImpl : postApplication 구현체
@@ -53,7 +51,12 @@ public class PostApplicationImpl implements PostApplication{
     }
 
     @Override
-    public PostDetailDto getPostDetails(Long memberId, Long postId) {
-        return postService.getPostDetails(memberId, postId);
+    public PostDetailDto getPostDetails(Long memberId, PostDetailCondition condition) {
+        return postService.getPostDetails(memberId, condition);
+    }
+
+    @Override
+    public void modifyPost(Long memberId, PostDetailCondition condition) {
+        postService.modifyPost(memberId, condition);
     }
 }

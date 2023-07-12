@@ -3,18 +3,14 @@ package com.seungh1024.controller;
 import com.seungh1024.Response;
 import com.seungh1024.application.PostApplication;
 import com.seungh1024.dto.PostDto;
-import com.seungh1024.dto.PostResDto;
+import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
-import com.seungh1024.repository.post.dto.PostMemberDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.seungh1024.Response.success;
 
@@ -52,13 +48,14 @@ public class PostController {
 
     //산텍힌 게시물 하나
     @GetMapping("/detail")
-    public Response<?> getPost(@AuthenticationPrincipal Long memberId, Long postId){
-        return success(postApplication.getPostDetails(memberId, postId));
+    public Response<?> getPost(@AuthenticationPrincipal Long memberId, PostDetailCondition condition){
+        return success(postApplication.getPostDetails(memberId, condition));
     }
 
     //게시글 수정. 내 것만 가능하도록
-    @PatchMapping()
-    public Response<?> updatePosts(){
+    @PatchMapping("/modify")
+    public Response<?> updatePosts(@AuthenticationPrincipal Long memberId, @RequestBody @Valid PostDetailCondition condition){
+        postApplication.modifyPost(memberId, condition);
         return success();
     }
 }

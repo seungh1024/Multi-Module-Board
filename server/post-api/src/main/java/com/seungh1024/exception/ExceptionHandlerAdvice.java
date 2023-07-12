@@ -3,7 +3,10 @@ package com.seungh1024.exception;
 import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
+import com.seungh1024.exception.custom.InvalidMemberException;
 import com.seungh1024.exception.custom.RestApiException;
+import com.seungh1024.exception.post.PostErrorCode;
+import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +58,36 @@ public class ExceptionHandlerAdvice {
                 errorCode.getCode(),
                 errorCode.getMessage(),
                 e.getBindingResult());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity handleNullPointerException(NullPointerException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = PostErrorCode.POST_NOT_FOUND_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidMemberException.class)
+    public ResponseEntity handleInvalidMemberException(InvalidMemberException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = PostErrorCode.INACTIVE_USER_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity handleUnexpectedTypeException(UnexpectedTypeException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.UNEXPECTED_TYPE_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 }

@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.entity.post.QPost;
+import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailDto;
 import com.seungh1024.repository.post.dto.PostMemberDto;
@@ -92,11 +93,11 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
     }
 
     @Override
-    public Post getPostDetails(Long postId) {
+    public Post getPostDetails(PostDetailCondition condition) {
         return select(post)
                 .from(post)
                 .leftJoin(post.member, member).fetchJoin()
-                .where(postIdEq(postId))
+                .where(postIdEq(condition.getPostId()))
                 .fetchOne();
     }
 

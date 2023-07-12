@@ -9,6 +9,7 @@ package com.seungh1024.entity.post;
 
 import com.seungh1024.entity.base.BaseEntity;
 import com.seungh1024.entity.member.Member;
+import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.dto.PostDetailDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -42,6 +43,9 @@ public class Post extends BaseEntity {
     @Column(name = "post_views")
     private Integer postViews = 0;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     // 여러개의 게시글은 각각의 사용자가 있다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -54,7 +58,6 @@ public class Post extends BaseEntity {
         this.postName = postName;
         this.postContent = postContent;
         this.postViews = postViews;
-
         this.member = member;
     }
 
@@ -76,6 +79,16 @@ public class Post extends BaseEntity {
 
     public void updateViews(){
         this.postViews += 1;
+    }
+    public void updatePost(PostDetailCondition condition){
+        System.out.println(condition);
+        if(condition.getPostName() != null){
+            this.postName = condition.getPostName();
+        }
+        if(condition.getPostContent() != null){
+            this.postContent = condition.getPostContent();
+        }
+        this.updatedAt = LocalDateTime.now();
     }
 
     public PostDetailDto entityToDto(){
