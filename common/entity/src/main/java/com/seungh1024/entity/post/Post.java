@@ -8,7 +8,6 @@ package com.seungh1024.entity.post;
  * */
 
 import com.seungh1024.entity.base.BaseEntity;
-import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.dto.PostDetailDto;
@@ -16,8 +15,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  * 게시글 엔티티
@@ -54,12 +51,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments = new ArrayList<>();
-
     public Post(){};
 
-    private Post(Long postId, String postName, String postContent, Integer postViews,LocalDateTime createdAt, Member member){
+    public Post(Long postId, String postName, String postContent, Integer postViews,LocalDateTime createdAt, Member member){
         this.postId = postId;
         this.postName = postName;
         this.postContent = postContent;

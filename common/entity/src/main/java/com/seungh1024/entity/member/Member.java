@@ -1,7 +1,6 @@
 package com.seungh1024.entity.member;
 
 import com.seungh1024.entity.base.BaseEntity;
-import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -44,11 +43,8 @@ public class Member extends BaseEntity {
     private MemberInfo memberInfo;
 
     // 사용자는 여러 개의 게시글을 작성할 수 있다.
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "postId")
     private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
 
 
     private Member(String memberEmail, String memberPassword, String memberName,String memberSalt,MemberInfo memberInfo){
