@@ -1,4 +1,4 @@
-package com.seungh1024.exception.post;
+package com.seungh1024.exception.comment;
 
 import com.seungh1024.ErrorCode;
 import lombok.Getter;
@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
  * */
 @Getter
 @RequiredArgsConstructor
-public enum PostErrorCode implements ErrorCode {
-    POST_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND,404,"게시글이 존재하지 않습니다."),
+public enum CommentErrorCode implements ErrorCode {
+    COMMENT_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND,404,"해당 게시글의 댓글이 존재하지 않습니다."),
     ;
     private final HttpStatus httpStatus;
     private final int code;

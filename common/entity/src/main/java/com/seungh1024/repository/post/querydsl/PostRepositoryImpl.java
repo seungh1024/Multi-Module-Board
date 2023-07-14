@@ -3,22 +3,14 @@ package com.seungh1024.repository.post.querydsl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.seungh1024.entity.post.Post;
-import com.seungh1024.entity.post.QPost;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
-import com.seungh1024.repository.post.dto.PostDetailDto;
-import com.seungh1024.repository.post.dto.PostMemberDto;
+import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import com.seungh1024.repository.support.QuerydslSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 import static com.seungh1024.entity.member.QMember.member;
 import static com.seungh1024.entity.post.QPost.post;
@@ -37,9 +29,9 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
 
     
     @Override
-    public Page<PostMemberDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
+    public Page<PostMemberQueryDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
         return applyPagination(pageable,select(
-                Projections.constructor(PostMemberDto.class,
+                Projections.constructor(PostMemberQueryDto.class,
                         post.postId,
                         post.postName,
                         member.memberName,
@@ -66,9 +58,9 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
     }
 
     @Override
-    public Page<PostMemberDto> getMyPosts(Long memberId, Pageable pageable) {
+    public Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable) {
         return applyPagination(pageable,select(
-                Projections.constructor(PostMemberDto.class,
+                Projections.constructor(PostMemberQueryDto.class,
                         post.postId,
                         post.postName,
                         member.memberName,

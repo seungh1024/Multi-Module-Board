@@ -11,14 +11,12 @@ package com.seungh1024.repository.post.querydsl;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
-import com.seungh1024.repository.post.dto.PostMemberDto;
+import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface PostRepositoryCustom {
-    Page<PostMemberDto> searchPosts(PostSearchConditionDto condition, Pageable pageable);
-    Page<PostMemberDto> getMyPosts(Long memberId, Pageable pageable);
+    Page<PostMemberQueryDto> searchPosts(PostSearchConditionDto condition, Pageable pageable);
+    Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable);
     Post getPostDetails(PostDetailCondition condition);
 }

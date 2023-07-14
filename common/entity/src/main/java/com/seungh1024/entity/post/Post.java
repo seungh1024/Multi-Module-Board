@@ -11,7 +11,7 @@ import com.seungh1024.entity.base.BaseEntity;
 import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
-import com.seungh1024.repository.post.dto.PostDetailDto;
+import com.seungh1024.repository.post.dto.PostDetailQueryDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -80,14 +80,13 @@ public class Post extends BaseEntity {
 
     public void updateMember(Member member){
         this.member = member;
-        member.getPosts().add(this);
+//        member.getPosts().add(this);
     }
 
     public void updateViews(){
         this.postViews += 1;
     }
     public void updatePost(PostDetailCondition condition){
-        System.out.println(condition);
         if(condition.getPostName() != null){
             this.postName = condition.getPostName();
         }
@@ -97,8 +96,8 @@ public class Post extends BaseEntity {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public PostDetailDto entityToDto(){
-        return new PostDetailDto(
+    public PostDetailQueryDto entityToDto(){
+        return new PostDetailQueryDto(
                 this.postId,
                 this.postName,
                 this.member.getMemberName(),
@@ -108,5 +107,11 @@ public class Post extends BaseEntity {
         );
     }
 
+    public boolean isOwner(Long memberId){
+        if(this.getMember().getMemberId() != memberId){
+            return false;
+        }
+        return true;
+    }
 
 }

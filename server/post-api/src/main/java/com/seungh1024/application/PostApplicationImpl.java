@@ -7,8 +7,8 @@ import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
-import com.seungh1024.repository.post.dto.PostDetailDto;
-import com.seungh1024.repository.post.dto.PostMemberDto;
+import com.seungh1024.repository.post.dto.PostDetailQueryDto;
+import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import com.seungh1024.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,22 +36,22 @@ public class PostApplicationImpl implements PostApplication{
         Post post = Post.createPost(postName, postContent);
 
         Member member = memberRepository.getReferenceById(memberId);
-        post.updateMember(member);
+        post.updateMember(member); // 양방향 모두 객체를 저장하면 쿼리가 두 번 나감. 사용자 추가 후 프록시에서 호출할 일 없으니 단방향으로만 저장
         postRepository.save(post);
     }
 
     @Override
-    public Page<PostMemberDto> getMyPosts(Long memberId, Pageable pageable) {
+    public Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable) {
         return postService.getMyPosts(memberId, pageable);
     }
 
     @Override
-    public Page<PostMemberDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
+    public Page<PostMemberQueryDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
         return postService.searchPosts(condition,pageable);
     }
 
     @Override
-    public PostDetailDto getPostDetails(Long memberId, PostDetailCondition condition) {
+    public PostDetailQueryDto getPostDetails(Long memberId, PostDetailCondition condition) {
         return postService.getPostDetails(memberId, condition);
     }
 

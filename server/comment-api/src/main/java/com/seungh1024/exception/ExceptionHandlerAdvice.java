@@ -4,9 +4,8 @@ import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
 import com.seungh1024.custom.InvalidMemberException;
+import com.seungh1024.exception.comment.CommentErrorCode;
 import com.seungh1024.exception.custom.RestApiException;
-import com.seungh1024.exception.post.PostErrorCode;
-import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -16,11 +15,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 /*
- * ExceptionHandlerAdvice : 예외 처리 핸들러
+ * 예외 처리 핸들러
  *
  * @Author 강승훈
- * @Since 2023.06.27
+ * @Since 2023.07.14
  *
  * */
 @Slf4j
@@ -43,6 +44,45 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity handleInvalidMemberException(InvalidDataAccessApiUsageException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.INVALID_DATA_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity handleNullPointerException(NullPointerException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommentErrorCode.COMMENT_NOT_FOUND_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidMemberException.class)
+    public ResponseEntity handleNullPointerException(InvalidMemberException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.INVALID_MEMBER_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity handleNullPointerException(NoSuchElementException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommentErrorCode.COMMENT_NOT_FOUND_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleSystemException(HttpMessageNotReadableException e){
         log.error("[SystemException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
@@ -59,46 +99,6 @@ public class ExceptionHandlerAdvice {
                 errorCode.getCode(),
                 errorCode.getMessage(),
                 e.getBindingResult());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
-    }
-
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity handleNullPointerException(NullPointerException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
-        ErrorCode errorCode = PostErrorCode.POST_NOT_FOUND_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
-                errorCode.getCode(),
-                errorCode.getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
-    }
-
-    @ExceptionHandler(InvalidMemberException.class)
-    public ResponseEntity handleInvalidMemberException(InvalidMemberException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
-        ErrorCode errorCode = CommonErrorCode.INVALID_MEMBER_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
-                errorCode.getCode(),
-                errorCode.getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
-    }
-
-    @ExceptionHandler(UnexpectedTypeException.class)
-    public ResponseEntity handleUnexpectedTypeException(UnexpectedTypeException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
-        ErrorCode errorCode = CommonErrorCode.UNEXPECTED_TYPE_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
-                errorCode.getCode(),
-                errorCode.getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
-    }
-
-    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ResponseEntity handleInvalidMemberException(InvalidDataAccessApiUsageException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
-        ErrorCode errorCode = CommonErrorCode.INVALID_DATA_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
-                errorCode.getCode(),
-                errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 }

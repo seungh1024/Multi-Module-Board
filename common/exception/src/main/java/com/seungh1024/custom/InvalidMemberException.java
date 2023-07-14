@@ -1,13 +1,12 @@
-package com.seungh1024.exception.custom;
+package com.seungh1024.custom;
 
 import lombok.Getter;
-import org.springframework.dao.DuplicateKeyException;
 
 /*
  * custom invalid member exception
  *
  * @Author 강승훈
- * @Since 2023.07.12
+ * @Since 2023.07.14
  *
  * */
 
