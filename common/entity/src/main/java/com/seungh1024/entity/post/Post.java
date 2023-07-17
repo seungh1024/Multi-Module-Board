@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class Post extends BaseEntity {
                 this.postName,
                 this.member.getMemberName(),
                 this.postViews,
-                this.getCreatedAt(),
+                this.getCreatedAt().format(DateTimeFormatter.ofPattern("yy.MM.dd HH:mm")),
                 this.postContent
         );
     }

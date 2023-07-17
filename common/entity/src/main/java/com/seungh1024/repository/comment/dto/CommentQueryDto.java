@@ -16,9 +16,9 @@ public class CommentQueryDto {
     private final Long commentId;
     private final String memberName;
     private final String commentContent;
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
-    public CommentQueryDto(Long commentId, String memberName, String commentContent, LocalDateTime createdAt){
+    public CommentQueryDto(Long commentId, String memberName, String commentContent, String createdAt){
         this.commentId = commentId;
         this.memberName = memberName;
         this.commentContent = commentContent;

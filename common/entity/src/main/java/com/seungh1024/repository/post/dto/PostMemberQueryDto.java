@@ -19,9 +19,9 @@ public class PostMemberQueryDto {
     private final String postName;
     private final String memberName;
     private final Integer postViews;
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
-    public PostMemberQueryDto(Long postId, String postName, String memberName, Integer postViews, LocalDateTime createdAt){
+    public PostMemberQueryDto(Long postId, String postName, String memberName, Integer postViews, String createdAt){
         this.postId = postId;
         this.postName = postName;
         this.createdAt = createdAt;

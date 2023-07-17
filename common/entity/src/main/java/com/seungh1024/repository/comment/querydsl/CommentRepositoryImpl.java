@@ -1,7 +1,9 @@
 package com.seungh1024.repository.comment.querydsl;
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.comment.QComment;
 import com.seungh1024.entity.member.QMember;
@@ -38,7 +40,11 @@ public class CommentRepositoryImpl extends QuerydslSupport implements CommentRep
                         comment.commentId,
                         comment.member.memberName,
                         comment.commentContent,
-                        comment.post.createdAt
+                                Expressions.stringTemplate(
+                                        "DATE_FORMAT({0}, {1})",
+                                        comment.post.createdAt,
+                                        ConstantImpl.create("%y.%m.%d %H:%i")
+                                )
                         )
                 )
                         .from(comment)
@@ -66,7 +72,11 @@ public class CommentRepositoryImpl extends QuerydslSupport implements CommentRep
                                 comment.commentId,
                                 comment.member.memberName,
                                 comment.commentContent,
-                                comment.createdAt
+                                    Expressions.stringTemplate(
+                                            "DATE_FORMAT({0}, {1})",
+                                            comment.post.createdAt,
+                                            ConstantImpl.create("%y.%m.%d %H:%i")
+                                    )
                                 )
                 )
                         .from(comment)

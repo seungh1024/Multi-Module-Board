@@ -1,8 +1,10 @@
 package com.seungh1024.repository.post.querydsl;
 
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import static com.seungh1024.entity.comment.QComment.comment;
 import static com.seungh1024.entity.member.QMember.member;
 import static com.seungh1024.entity.post.QPost.post;
 
@@ -36,7 +39,11 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                         post.postName,
                         member.memberName,
                         post.postViews,
-                        post.createdAt
+                        Expressions.stringTemplate(
+                                "DATE_FORMAT({0}, {1})",
+                                post.createdAt,
+                                ConstantImpl.create("%y.%m.%d %H:%i")
+                        )
                 ))
                 .from(post)
                 .leftJoin(post.member, member)
@@ -65,7 +72,11 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                         post.postName,
                         member.memberName,
                         post.postViews,
-                        post.createdAt
+                        Expressions.stringTemplate(
+                                "DATE_FORMAT({0}, {1})",
+                                post.createdAt,
+                                ConstantImpl.create("%y.%m.%d %H:%i")
+                        )
                 ))
                 .from(post)
                 .leftJoin(post.member, member)

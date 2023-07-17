@@ -17,10 +17,10 @@ public class PostDetailQueryDto {
     private final String postName;
     private final String memberName;
     private final Integer postViews;
-    private final LocalDateTime createdAt;
+    private final String createdAt;
     private final String postContent;
 
-    public PostDetailQueryDto(Long postId, String postName, String memberName, Integer postViews, LocalDateTime createdAt, String postContent) {
+    public PostDetailQueryDto(Long postId, String postName, String memberName, Integer postViews, String createdAt, String postContent) {
         this.postId = postId;
         this.postName = postName;
         this.memberName = memberName;

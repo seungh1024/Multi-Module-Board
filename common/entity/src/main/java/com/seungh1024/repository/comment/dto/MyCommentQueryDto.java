@@ -18,9 +18,9 @@ public class MyCommentQueryDto {
     private final Long commentId;
     private final String memberName;
     private final String commentContent;
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
-    public MyCommentQueryDto(Long postId, String postName, Long commentId, String memberName, String commentContent, LocalDateTime createdAt){
+    public MyCommentQueryDto(Long postId, String postName, Long commentId, String memberName, String commentContent, String createdAt){
         this.postId = postId;
         this.postName = postName;
         this.commentId = commentId;
