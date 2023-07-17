@@ -8,6 +8,7 @@ import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.comment.CommentRepository;
 import com.seungh1024.repository.comment.condition.CommentCondition;
 import com.seungh1024.repository.comment.dto.CommentQueryDto;
+import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.service.CommentService;
@@ -48,5 +49,10 @@ public class CommentApplicationImpl implements CommentApplication {
     @Override
     public void modifyComment(Long memberId, CommentUpdateBodyDto commentDto) {
         commentService.modifyComment(memberId, commentDto);
+    }
+
+    @Override
+    public Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable) {
+        return commentService.getMyCommentList(memberId,pageable);
     }
 }

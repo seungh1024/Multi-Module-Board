@@ -78,9 +78,7 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                 select(post.count())
                         .from(post)
                         .leftJoin(post.member, member)
-                        .where(
-                                memberIdEq(memberId)
-                        )
+                        .where(memberIdEq(memberId))
         );
     }
 

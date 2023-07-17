@@ -8,6 +8,7 @@ import com.seungh1024.entity.member.QMember;
 import com.seungh1024.entity.post.QPost;
 import com.seungh1024.repository.comment.condition.CommentCondition;
 import com.seungh1024.repository.comment.dto.CommentQueryDto;
+import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
 import com.seungh1024.repository.support.QuerydslSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,36 +34,59 @@ public class CommentRepositoryImpl extends QuerydslSupport implements CommentRep
     public Page<CommentQueryDto> getCommentList(CommentCondition condition, Pageable pageable){
         return applyPagination(pageable,
                 select(
-                Projections.constructor(CommentQueryDto.class,
+                        Projections.constructor(CommentQueryDto.class,
                         comment.commentId,
                         comment.member.memberName,
                         comment.commentContent,
                         comment.post.createdAt
                         )
                 )
-                .from(comment)
-                .leftJoin(comment.post, post)
-                .leftJoin(comment.member, member)
-                .where(
-                        postIdEq(condition.getPostId()
-                        )
-                ),
+                        .from(comment)
+                        .leftJoin(comment.post, post)
+                        .leftJoin(comment.member, member)
+                        .where(postIdEq(condition.getPostId()))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize()),
 
-                select(
-                        comment.count()
-                )
-                .from(comment)
-                .leftJoin(comment.post, post)
-                .leftJoin(comment.member, member)
-                .where(
-                        postIdEq(condition.getPostId()
-                        )
-                )
+                select(comment.count())
+                        .from(comment)
+                        .leftJoin(comment.post, post)
+                        .leftJoin(comment.member, member)
+                        .where(postIdEq(condition.getPostId()))
         );
-
     }
+
+    @Override
+    public Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable) {
+        return applyPagination(pageable,
+                select(
+                        Projections.constructor(MyCommentQueryDto.class,
+                                comment.post.postId,
+                                comment.post.postName,
+                                comment.commentId,
+                                comment.member.memberName,
+                                comment.commentContent,
+                                comment.createdAt
+                                )
+                )
+                        .from(comment)
+                        .leftJoin(comment.post, post)
+                        .leftJoin(comment.member, member)
+                        .where(memberIdEq(memberId))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize()),
+
+                select(comment.count())
+                        .from(comment)
+                        .leftJoin(comment.post, post)
+                        .leftJoin(comment.member, member)
+                        .where(memberIdEq(memberId))
+        );
+    }
+
 
     private BooleanExpression postIdEq(Long postId){
         return comment.post.postId.eq(postId);
     }
+    private BooleanExpression memberIdEq(Long memberId){ return comment.member.memberId.eq(memberId);}
 }

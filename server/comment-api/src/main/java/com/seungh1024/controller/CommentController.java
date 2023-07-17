@@ -41,4 +41,9 @@ public class CommentController {
         commentApplication.modifyComment(memberId, commentDto);
         return success();
     }
+
+    @GetMapping("/my/list")
+    public Response<?> getMyCommentList(@AuthenticationPrincipal Long memberId, Pageable pageable){
+        return success(commentApplication.getMyCommentList(memberId, pageable));
+    }
 }

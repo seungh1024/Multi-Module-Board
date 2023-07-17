@@ -8,6 +8,7 @@ import com.seungh1024.repository.comment.CommentRepository;
 import com.seungh1024.repository.comment.condition.CommentCondition;
 import com.seungh1024.repository.comment.dto.CommentQueryDto;
 import com.seungh1024.repository.comment.dto.CommentUpdateDto;
+import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,12 +44,14 @@ public class CommentServiceImpl implements CommentService{
         if(!comment.isOwner(memberId)){
             throw new InvalidMemberException("권한이 없는 사용자입니다.");
         }
-//        if(comment.getMember().getMemberId() != memberId){
-//            throw new InvalidMemberException("권한이 없는 사용자입니다.");
-//        }
         CommentUpdateDto updateDto = commentDto.reqBodyToEntityDto();
         comment.updateComment(updateDto);
         commentRepository.save(comment);
+    }
+
+    @Override
+    public Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable) {
+        return commentRepository.getMyCommentList(memberId, pageable);
     }
 
 }
