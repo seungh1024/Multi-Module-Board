@@ -10,18 +10,15 @@ package com.seungh1024.exception;
 import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
-import com.seungh1024.exception.custom.DuplicateMemberException;
+import com.seungh1024.exception.custom.*;
 import com.seungh1024.encrypt.EncryptException;
-import com.seungh1024.exception.custom.RestApiException;
 import com.seungh1024.exception.encrypt.EncryptErrorCode;
 import com.seungh1024.exception.member.MemberErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -94,31 +91,31 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleHttpClientErrorException(DuplicateMemberException e){
         log.error("[DuplicateMemberException : Conflict] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.MEMBER_ALREADY_EXISTS_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), e.getMessage()+ errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),  errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity handleEntityNotFoundException(UsernameNotFoundException e){
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity handleEntityNotFoundException(MemberNotFoundException e){
         log.error("[EntityNotFoundException] cause:{}, message: {}", NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.MEMBER_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity handleUsernameNotFoundException(BadCredentialsException e){
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity handleInvalidPasswordException(InvalidPasswordException e){
         log.error("[DuplicateMemberException : Conflict] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.INVALID_PASSWORD_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), e.getMessage()+ errorCode.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(), errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(AccountExpiredException.class)
-    public ResponseEntity handleAccountExpiredException(AccountExpiredException e){
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity handleTokenExpiredException(TokenExpiredException e){
         log.error("[AccountExpiredException] cause : {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
-        ErrorCode errorCode = MemberErrorCode.ACCOUNT_EXPIRED_ERROR;
-        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),e.getMessage()+errorCode.getMessage());
+        ErrorCode errorCode = MemberErrorCode.TOKEN_EXPIRED_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
@@ -131,4 +128,23 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity handleHttpRequestMethodNotSupportedExceptionn(HttpRequestMethodNotSupportedException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidAccessException.class)
+    public ResponseEntity handleInvalidAccessException(InvalidAccessException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = MemberErrorCode.INVALID_ACCESS_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
 }

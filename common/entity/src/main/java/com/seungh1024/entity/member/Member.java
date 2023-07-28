@@ -51,7 +51,7 @@ public class Member extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
 
-    private Member(String memberEmail, String memberPassword, String memberName,String memberSalt,MemberInfo memberInfo){
+    public Member(String memberEmail, String memberPassword, String memberName,String memberSalt,MemberInfo memberInfo){
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -60,13 +60,6 @@ public class Member extends BaseEntity {
     }
 
     public Member() {} //spring jpa 사용하려면 기본 생성자가 public으로 있어야 함. 나는 다른 생성자를 private으로 해서 기본 생성자를 이렇게 만들어줘야 함.
-
-    public static Member createMember(String memberEmail, String memberPassword, String memberName, String memberSalt, MemberInfo memberInfo){
-        return new Member(memberEmail,memberPassword,memberName,memberSalt, memberInfo);
-    }
-
-    //TODO 회원 상세 정보 업데이트 메소드
-
 
     public void updatePassword(String memberPassword, String salt){
         if(memberPassword != null) {
@@ -81,4 +74,10 @@ public class Member extends BaseEntity {
         if(memberAge != null) this.memberInfo.updateAge(memberAge);
     }
 
+
+    public void updateInfo(String memberName, Integer memberAge, String encodedPassword, String salt){
+        updatePassword(encodedPassword, salt);
+        updateName(memberName);
+        updateAge(memberAge);
+    }
 }

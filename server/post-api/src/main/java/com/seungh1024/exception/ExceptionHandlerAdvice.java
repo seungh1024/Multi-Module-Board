@@ -4,6 +4,7 @@ import com.seungh1024.ErrorCode;
 import com.seungh1024.ErrorResponse;
 import com.seungh1024.common.CommonErrorCode;
 import com.seungh1024.custom.InvalidMemberException;
+import com.seungh1024.exception.custom.PostNotFoundException;
 import com.seungh1024.exception.custom.RestApiException;
 import com.seungh1024.exception.post.PostErrorCode;
 import jakarta.validation.UnexpectedTypeException;
@@ -12,6 +13,7 @@ import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -62,8 +64,8 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity handleNullPointerException(NullPointerException e){
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity handlePostNotFoundException(PostNotFoundException e){
         log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = PostErrorCode.POST_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
@@ -96,6 +98,16 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleInvalidMemberException(InvalidDataAccessApiUsageException e){
         log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_DATA_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity handleHttpRequestMethodNotSupportedExceptionn(HttpRequestMethodNotSupportedException e){
+        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
                 errorCode.getMessage());

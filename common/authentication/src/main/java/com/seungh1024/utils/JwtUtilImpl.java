@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 
 
 /*
@@ -18,6 +19,15 @@ import java.util.Date;
 
 @Component
 public class JwtUtilImpl implements JwtUtil{
+    public HashMap<String,String> makeResponseTokens(Long memberId, String memberEmail, String jwtSecret, Long accessExpired, Long refreshExpired){
+        HashMap<String,String> tokens = new HashMap<>();
+        String accessToken = createAccessJwt(memberId,memberEmail,jwtSecret,accessExpired);
+        String refreshToken = createRefreshJwt(memberId,memberEmail,jwtSecret,refreshExpired);
+        tokens.put("accessToken",accessToken);
+        tokens.put("refreshToken",refreshToken);
+
+        return tokens;
+    }
 
     public String createAccessJwt(Long memberId, String memberEmail, String jwtSecret, Long accessExpired){
         // 원하는 정보를 담기 위해 jwt에서 Claim이라는 공간을 제공해 줌. 여기다 정보를 담을 것임

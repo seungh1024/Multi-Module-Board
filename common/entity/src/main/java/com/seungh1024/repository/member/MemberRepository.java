@@ -1,7 +1,9 @@
 package com.seungh1024.repository.member;
 
 import com.seungh1024.entity.member.Member;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /*
  * Member JPA
@@ -11,5 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * */
 public interface MemberRepository extends JpaRepository<Member,Long> {
-    Member findMemberByMemberEmail(String memberEmail); //사용자 검색
+    @Query("select m from Member m where m.memberEmail = :memberEmail")
+    Member searchMember(@Param("memberEmail") String memberEmail); //사용자 검색
 }

@@ -41,3 +41,9 @@ out/
 !**/properties/
 /properties/
 env.properties
+
+!**/test/resources/application.yml
+/test/resources/
+
+*.hprof
+java_pid65341.hprof.cve3kk.b.ij

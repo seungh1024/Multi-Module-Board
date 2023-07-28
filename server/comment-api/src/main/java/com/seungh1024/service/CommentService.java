@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CommentService {
     Page<CommentQueryDto> getCommentList(CommentCondition condition, Pageable pageable);
+    void createComment(Long memberId, CommentCreateBodyDto commentDto);
 
     void modifyComment(Long memberId, CommentUpdateBodyDto commentDto);
 

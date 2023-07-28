@@ -1,5 +1,6 @@
 package com.seungh1024.encrypt;
 
+import com.seungh1024.encrypt.dto.PasswordCheckerDto;
 import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
@@ -57,8 +58,8 @@ public class CustomPasswordEncoder implements SeunghPasswordEncoder, RandomSalt,
     }
 
     @Override
-    public Boolean isCorrectPassword(String inputPassword, String memberPassword, String salt){
-        String encryptedPassword = encryptPassword(inputPassword, salt);
-        return encryptedPassword.equals(memberPassword);
+    public Boolean isCorrectPassword(PasswordCheckerDto passwordCheckerDto){
+        String encryptedPassword = encryptPassword(passwordCheckerDto.getInputPassword(), passwordCheckerDto.getSalt());
+        return encryptedPassword.equals(passwordCheckerDto.getMemberPassword());
     }
 }

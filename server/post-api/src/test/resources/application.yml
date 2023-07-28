@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  #MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/multimodule_test?serverTimezone=UTC&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy
+
+  #JPA
+  jpa:
+    #database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    defer-datasource-initialization: true
+
+
+
+logging:
+  level:
+    com.seungh1024: error

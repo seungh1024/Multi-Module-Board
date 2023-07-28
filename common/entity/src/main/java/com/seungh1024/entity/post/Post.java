@@ -1,4 +1,7 @@
 package com.seungh1024.entity.post;
+
+import com.seungh1024.entity.base.BaseEntity;
+
 /*
  * 게시글 Entity
  *
@@ -6,27 +9,16 @@ package com.seungh1024.entity.post;
  * @Since 2023.06.27
  *
  * */
-
-import com.seungh1024.entity.base.BaseEntity;
 import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
-import com.seungh1024.repository.post.dto.PostDetailQueryDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * 게시글 엔티티
- *
- * @Author 강승훈
- * @Since 2023.07.11
- *
- * */
 @Entity
 @Table(name = "post")
 @Getter
@@ -68,44 +60,28 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-
-//    @Builder
-    private Post(String postName, String postContent){
+    public Post(String postName, String postContent){
         this.postName = postName;
         this.postContent = postContent;
     }
 
-    public static Post createPost(String postName, String postContent){
-        return new Post(postName, postContent);
-    }
-
     public void updateMember(Member member){
         this.member = member;
-//        member.getPosts().add(this);
+        member.getPosts().add(this);
     }
 
     public void updateViews(){
         this.postViews += 1;
     }
-    public void updatePost(PostDetailCondition condition){
-        if(condition.getPostName() != null){
-            this.postName = condition.getPostName();
+
+    public void updatePost(String postName, String postContent){
+        if(postName != null){
+            this.postName = postName;
         }
-        if(condition.getPostContent() != null){
-            this.postContent = condition.getPostContent();
+        if(postContent != null){
+            this.postContent = postContent;
         }
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public PostDetailQueryDto entityToDto(){
-        return new PostDetailQueryDto(
-                this.postId,
-                this.postName,
-                this.member.getMemberName(),
-                this.postViews,
-                this.getCreatedAt().format(DateTimeFormatter.ofPattern("yy.MM.dd HH:mm")),
-                this.postContent
-        );
     }
 
     public boolean isOwner(Long memberId){

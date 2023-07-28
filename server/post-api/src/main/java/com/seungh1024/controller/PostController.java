@@ -39,7 +39,7 @@ public class PostController {
     public Response<?> getMyPosts(@AuthenticationPrincipal Long memberId, Pageable pageable){
         return success(postApplication.getMyPosts(memberId, pageable));
     }
-
+// TODO dto 분리
     // 게시글 검색
     @GetMapping("/search")
     public Response<?> getSearchPosts(PostSearchConditionDto condition, Pageable pageable){

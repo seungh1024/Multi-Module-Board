@@ -1,5 +1,6 @@
 package com.seungh1024.dto;
 
+import com.seungh1024.entity.post.Post;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -22,5 +23,9 @@ public class PostDto {
 
     public String toString(){
         return "postNmae: "+postName + "String: "+postContent;
+    }
+
+    public Post toEntity() {
+        return new Post(this.postName,this.postContent);
     }
 }

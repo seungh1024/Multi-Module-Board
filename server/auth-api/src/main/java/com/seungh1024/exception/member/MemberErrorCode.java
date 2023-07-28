@@ -16,11 +16,12 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum MemberErrorCode implements ErrorCode {
-    MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND,404,"존재하지 않는 사용자입니다"),
-    MEMBER_ALREADY_EXISTS_ERROR(HttpStatus.CONFLICT,409, "는 이미 존재하는 회원입니다"),
-    INACTIVE_USER_ERROR(HttpStatus.FORBIDDEN, 403,"권한이 없는 사용자입니다"),
     INVALID_PASSWORD_ERROR(HttpStatus.BAD_REQUEST,400,"비밀번호가 일치하지 않습니다."),
-    ACCOUNT_EXPIRED_ERROR(HttpStatus.UNAUTHORIZED, 401, "로그아웃 되었습니다. 다시 로그인 해주세요."),
+    INVALID_ACCESS_ERROR(HttpStatus.BAD_REQUEST,400,"올바르지 않은 접근 경로입니다. 다시 로그인 해주세요."),
+    TOKEN_EXPIRED_ERROR(HttpStatus.UNAUTHORIZED, 401, "토큰이 만료되어 로그아웃 되었습니다. 다시 로그인 해주세요."),
+    INACTIVE_USER_ERROR(HttpStatus.FORBIDDEN, 403,"권한이 없는 사용자입니다"),
+    MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND,404,"존재하지 않는 사용자입니다"),
+    MEMBER_ALREADY_EXISTS_ERROR(HttpStatus.CONFLICT,409, "해당 아이디는 이미 존재합니다. 다른 아이디를 사용해주세요."),
     ;
     private final HttpStatus httpStatus;
     private final int code;

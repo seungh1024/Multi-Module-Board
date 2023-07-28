@@ -1,5 +1,7 @@
 package com.seungh1024.encrypt;
 
+import com.seungh1024.encrypt.dto.PasswordCheckerDto;
+
 /*
  * PasswordChecker 비밀번호 확인 인터페이스
  *
@@ -8,5 +10,5 @@ package com.seungh1024.encrypt;
  *
  * */
 public interface PasswordChecker {
-    Boolean isCorrectPassword(String inputPassword, String memberPassword, String salt);
+    Boolean isCorrectPassword(PasswordCheckerDto passwordCheckerDto);
 }

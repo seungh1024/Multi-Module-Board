@@ -1,5 +1,8 @@
 package com.seungh1024.dto;
 
+import com.seungh1024.encrypt.dto.PasswordCheckerDto;
+import com.seungh1024.entity.member.Member;
+import com.seungh1024.entity.member.MemberInfo;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -35,6 +38,14 @@ public class MemberReqDto {
         @Nullable
         @Max(value = 150 , message = "나이가 150을 넘을 순 없습니다")
         private final int memberAge;
+
+        public MemberInfo toMemberInfo(){
+            return new MemberInfo(this.memberAge);
+        }
+
+        public Member toMember(String encodedPassword, String salt, MemberInfo memberInfo){
+            return new Member(this.getMemberEmail(),encodedPassword,this.memberName,salt,memberInfo);
+        }
     }
 
     @Getter
@@ -45,6 +56,10 @@ public class MemberReqDto {
         public final String memberEmail;
         @NotBlank
         public final String memberPassword;
+
+        public PasswordCheckerDto toPasswordCheckerDto(Member member) {
+            return new PasswordCheckerDto(this.memberPassword, member.getMemberPassword(),member.getMemberSalt());
+        }
     }
 
 

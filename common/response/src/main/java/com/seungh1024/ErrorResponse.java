@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -53,7 +54,8 @@ public class ErrorResponse {
         public static List<ValidationError> of(final BindingResult bindingResult){
             return bindingResult.getFieldErrors().stream()
                     .map(ValidationError :: new)
-                    .toList();
+                    .collect(Collectors.toList()); //8버전
+//                    .toList();
         }
 
     }

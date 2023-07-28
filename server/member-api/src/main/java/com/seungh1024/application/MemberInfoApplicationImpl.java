@@ -3,10 +3,7 @@ package com.seungh1024.application;
 
 import com.seungh1024.dto.MemberInfoDto;
 import com.seungh1024.dto.MemberReqDto;
-import com.seungh1024.encrypt.RandomSalt;
-import com.seungh1024.encrypt.SeunghPasswordEncoder;
-import com.seungh1024.entity.member.Member;
-import com.seungh1024.repository.member.MemberRepository;
+import com.seungh1024.service.MemberInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MemberInfoApplicationImpl implements MemberInfoApplication{
-    private final MemberRepository memberRepository;
-    private final RandomSalt randomSalt;
-    private final SeunghPasswordEncoder seunghPasswordEncoder;
+    private final MemberInfoService memberInfoService;
     @Override
     public MemberInfoDto getMemberInfo(Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
-        MemberInfoDto memberInfoDto = MemberInfoDto.getAllMemberInfo(member);
-        return memberInfoDto;
+        return memberInfoService.getMemberInfo(memberId);
     }
 
     @Override
     public void updateMemberInfo(MemberReqDto.InfoDto memberDto, Long memberId){
-        Member member = memberRepository.findById(memberId).get();
-        String salt = randomSalt.getSalt();
-        String encodedPassword = seunghPasswordEncoder.encryptPassword(memberDto.getMemberPassword(),salt);
-        member.updatePassword( encodedPassword,salt);
-        member.updateName(memberDto.getMemberName());
-        member.updateAge(memberDto.getMemberAge());
-        memberRepository.save(member);
+        memberInfoService.updateMemberInfo(memberDto,memberId);
     }
 }

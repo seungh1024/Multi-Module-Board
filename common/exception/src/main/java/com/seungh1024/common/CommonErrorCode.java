@@ -22,6 +22,7 @@ public enum CommonErrorCode implements ErrorCode {
     UNEXPECTED_TYPE_ERROR(HttpStatus.FORBIDDEN, 400,"알맞은 요청 타입으로 요청해주세요"),
     INVALID_DATA_ERROR(HttpStatus.FORBIDDEN, 400,"요청 데이터를 확인해주세요"),
     INVALID_MEMBER_ERROR(HttpStatus.FORBIDDEN, 403,"권한이 없는 사용자입니다"),
+    METHOD_NOT_ALLOWED(HttpStatus.FORBIDDEN, 405,"메소드를 확인해주세요."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
     ;
     private final HttpStatus httpStatus;

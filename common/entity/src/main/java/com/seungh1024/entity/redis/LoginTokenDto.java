@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.util.HashMap;
+
 @Getter
 @RedisHash(value = "refreshToken")
 public class LoginTokenDto {
@@ -18,7 +20,7 @@ public class LoginTokenDto {
     @TimeToLive //유효시간 값으로 초 단위임. 밀리초로 바꾸고 싶다면 unit = TimeUnit.MILLISECONDS 옵션을 주면 됨
     private Long expiration;
 
-    protected LoginTokenDto(){}; // redis도 jpa 사용하니 기본 생성자가 필요하다.
+    public LoginTokenDto(){}; // redis도 jpa 사용하니 기본 생성자가 필요하다.
 
 
     private LoginTokenDto(String memberId, String accessToken, Long expiration){
@@ -26,8 +28,10 @@ public class LoginTokenDto {
         this.accessToken = accessToken;
         this.expiration = expiration;
     }
-    public static LoginTokenDto createAccessRefreshToken(String memberId, String accessToken, long expiredTime){
-        return new LoginTokenDto(memberId,accessToken,expiredTime/1000);
+    public LoginTokenDto(Long memberId, HashMap<String,String> tokens, long expiration){
+        this.id = memberId+"";
+        this.accessToken = tokens.get("accessToken");
+        this.expiration = expiration;
     }
 
     public void updateAccessToken(String accessToken){

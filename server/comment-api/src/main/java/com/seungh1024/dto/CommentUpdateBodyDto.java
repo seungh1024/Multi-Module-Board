@@ -23,7 +23,7 @@ public class CommentUpdateBodyDto {
     @NotBlank
     private final String commentContent;
 
-    public CommentUpdateDto reqBodyToEntityDto(){
+    public CommentUpdateDto toUpdateDto(){
         return new CommentUpdateDto(this.commentContent);
     }
 }

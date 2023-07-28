@@ -12,8 +12,5 @@ import org.springframework.dao.DuplicateKeyException;
  * */
 
 @Getter
-public class DuplicateMemberException extends DuplicateKeyException {
-    public DuplicateMemberException(String msg) {
-        super(msg);
-    }
+public class DuplicateMemberException extends RuntimeException {
 }

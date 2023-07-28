@@ -27,9 +27,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentApplicationImpl implements CommentApplication {
-    private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final CommentService commentService;
 
     @Override
@@ -39,11 +36,7 @@ public class CommentApplicationImpl implements CommentApplication {
 
     @Override
     public void createComment(Long memberId, CommentCreateBodyDto commentDto) {
-        Comment comment = commentDto.dtoToEntity();
-        Member member = memberRepository.getReferenceById(memberId);
-        Post post = postRepository.getReferenceById(commentDto.getPostId());
-        comment.addFk(member,post);
-        commentRepository.save(comment);
+        commentService.createComment(memberId,commentDto);
     }
 
     @Override

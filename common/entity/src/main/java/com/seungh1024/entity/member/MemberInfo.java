@@ -29,12 +29,8 @@ public class MemberInfo {
     private Member member;
 
 
-    private MemberInfo(int memberAge){
+    public MemberInfo(int memberAge){
         this.memberAge = memberAge;
-    }
-
-    public static MemberInfo createMemberInfo(int memberAge){
-        return new MemberInfo(memberAge);
     }
 
     public void updateAge(int memberAge){this.memberAge = memberAge; }
