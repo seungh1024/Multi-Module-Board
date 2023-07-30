@@ -66,7 +66,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity handlePostNotFoundException(PostNotFoundException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[PostNotFoundException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = PostErrorCode.POST_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -76,7 +76,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(InvalidMemberException.class)
     public ResponseEntity handleInvalidMemberException(InvalidMemberException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[InvalidMemberException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_MEMBER_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -86,7 +86,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(UnexpectedTypeException.class)
     public ResponseEntity handleUnexpectedTypeException(UnexpectedTypeException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[UnexpectedTypeException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.UNEXPECTED_TYPE_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -96,7 +96,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     public ResponseEntity handleInvalidMemberException(InvalidDataAccessApiUsageException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[InvalidDataAccessApiUsageException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_DATA_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -106,7 +106,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity handleHttpRequestMethodNotSupportedExceptionn(HttpRequestMethodNotSupportedException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[HttpRequestMethodNotSupportedException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),

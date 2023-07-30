@@ -48,7 +48,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     public ResponseEntity handleInvalidMemberException(InvalidDataAccessApiUsageException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[InvalidDataAccessApiUsageException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_DATA_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -57,7 +57,7 @@ public class ExceptionHandlerAdvice {
     }
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity handleCommentNotFoundException(CommentNotFoundException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[CommentNotFoundException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommentErrorCode.COMMENT_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -67,7 +67,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(InvalidMemberException.class)
     public ResponseEntity handleNullPointerException(InvalidMemberException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[InvalidMemberException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.INVALID_MEMBER_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -77,7 +77,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity handleNullPointerException(NoSuchElementException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[NoSuchElementException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommentErrorCode.COMMENT_NOT_FOUND_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
@@ -87,7 +87,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleSystemException(HttpMessageNotReadableException e){
-        log.error("[SystemException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[HttpMessageNotReadableException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.JSON_PARSE_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),errorCode.getCode(),  errorCode.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
@@ -106,7 +106,7 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity handleHttpRequestMethodNotSupportedExceptionn(HttpRequestMethodNotSupportedException e){
-        log.error("[MethodArgumentNotValidException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        log.error("[HttpRequestMethodNotSupportedException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),

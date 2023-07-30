@@ -37,14 +37,10 @@ public class CommentRepositoryImpl extends QuerydslSupport implements CommentRep
         return applyPagination(pageable,
                 select(
                         Projections.constructor(CommentQueryDto.class,
-                        comment.commentId,
-                        comment.member.memberName,
-                        comment.commentContent,
-                                Expressions.stringTemplate(
-                                        "DATE_FORMAT({0}, {1})",
-                                        comment.post.createdAt,
-                                        ConstantImpl.create("%y.%m.%d %H:%i")
-                                )
+                                comment.commentId,
+                                comment.member.memberName,
+                                comment.commentContent,
+                                comment.post.createdAt
                         )
                 )
                         .from(comment)
@@ -72,12 +68,8 @@ public class CommentRepositoryImpl extends QuerydslSupport implements CommentRep
                                 comment.commentId,
                                 comment.member.memberName,
                                 comment.commentContent,
-                                    Expressions.stringTemplate(
-                                            "DATE_FORMAT({0}, {1})",
-                                            comment.post.createdAt,
-                                            ConstantImpl.create("%y.%m.%d %H:%i")
-                                    )
-                                )
+                                comment.post.createdAt
+                        )
                 )
                         .from(comment)
                         .leftJoin(comment.post, post)

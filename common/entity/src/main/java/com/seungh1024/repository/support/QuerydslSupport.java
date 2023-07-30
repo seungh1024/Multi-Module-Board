@@ -1,5 +1,6 @@
 package com.seungh1024.repository.support;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -65,6 +66,9 @@ public class QuerydslSupport {
     }
 
     protected <T> JPAQuery<T> select(Expression<T> expr){
+        return getQueryFactory().select(expr);
+    }
+    protected <T> JPAQuery<Tuple> select(Expression<?>... expr){
         return getQueryFactory().select(expr);
     }
 

@@ -1,6 +1,8 @@
 package com.seungh1024.repository.comment.dto;
 
+import com.seungh1024.repository.base.BaseTime;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -12,16 +14,16 @@ import java.time.LocalDateTime;
  *
  * */
 @Getter
-public class CommentQueryDto {
+public class CommentQueryDto extends BaseTime {
     private final Long commentId;
     private final String memberName;
     private final String commentContent;
-    private final String createdAt;
 
-    public CommentQueryDto(Long commentId, String memberName, String commentContent, String createdAt){
+
+    public CommentQueryDto(Long commentId, String memberName, String commentContent, LocalDateTime createdAt){
+        super(createdAt);
         this.commentId = commentId;
         this.memberName = memberName;
         this.commentContent = commentContent;
-        this.createdAt = createdAt;
     }
 }

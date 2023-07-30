@@ -1,6 +1,7 @@
 package com.seungh1024.service;
 
 import com.seungh1024.custom.InvalidMemberException;
+import com.seungh1024.dto.PostDetailDto;
 import com.seungh1024.dto.PostDto;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.entity.post.Post;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /*
  * PostServiceImpl : PostService 구현체
@@ -53,26 +56,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDetailQueryDto getPostDetails(Long memberId, PostDetailCondition condition) {
-        Post selectPost = postRepository.getPostDetails(condition);
-        if(selectPost == null) throw new NullPointerException();
-        if(!selectPost.isOwner(memberId)){ // 자신의 게시물이 아니면 조회수 증가
-            selectPost.updateViews();
-        }
-        postRepository.save(selectPost);
-        return new PostDetailQueryDto(selectPost);
+    public PostDetailDto getPostDetails(Long memberId, PostDetailCondition condition) {
+        List<PostDetailQueryDto> selectPost = postRepository.getPostDetails(condition);
+//        if(selectPost.size() == 0) throw new NullPointerException();
+//        if(!selectPost.get(0).isOwner(memberId)){ // 자신의 게시물이 아니면 조회수 증가
+//            selectPost.updateViews();
+//        }
+//        postRepository.save(selectPost);
+        return new PostDetailDto(selectPost);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void modifyPost(Long memberId, PostDetailCondition condition) {
-        Post selectPost = postRepository.getPostDetails(condition);
-        if(selectPost == null) throw new PostNotFoundException();
-        if(!selectPost.isOwner(memberId)) {
-            throw new InvalidMemberException("권한이 없는 사용자입니다.");
-        }
-        selectPost.updatePost(condition.getPostName(), condition.getPostContent());
-        postRepository.save(selectPost);
+//        Post selectPost = postRepository.getPostDetails(condition);
+//        if(selectPost == null) throw new PostNotFoundException();
+//        if(!selectPost.isOwner(memberId)) {
+//            throw new InvalidMemberException("권한이 없는 사용자입니다.");
+//        }
+//        selectPost.updatePost(condition.getPostName(), condition.getPostContent());
+//        postRepository.save(selectPost);
     }
 
 }

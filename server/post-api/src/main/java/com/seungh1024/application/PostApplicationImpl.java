@@ -1,5 +1,6 @@
 package com.seungh1024.application;
 
+import com.seungh1024.dto.PostDetailDto;
 import com.seungh1024.dto.PostDto;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.entity.post.Post;
@@ -44,7 +45,7 @@ public class PostApplicationImpl implements PostApplication{
     }
 
     @Override
-    public PostDetailQueryDto getPostDetails(Long memberId, PostDetailCondition condition) {
+    public PostDetailDto getPostDetails(Long memberId, PostDetailCondition condition) {
         return postService.getPostDetails(memberId, condition);
     }
 
