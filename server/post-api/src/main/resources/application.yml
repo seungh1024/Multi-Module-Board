@@ -30,4 +30,4 @@ spring:
 
 logging:
   level:
-    com.seungh1024: error
+    com.seungh1024: debug

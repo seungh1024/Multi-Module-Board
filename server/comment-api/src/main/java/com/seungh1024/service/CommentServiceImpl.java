@@ -31,6 +31,7 @@ import java.util.List;
  * */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentServiceImpl implements CommentService{
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
@@ -55,7 +56,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public void modifyComment(Long memberId, CommentUpdateBodyDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.getCommentId()).orElseGet(()->null);
         if(comment == null){

@@ -9,6 +9,7 @@ import com.seungh1024.entity.member.Member;
 import com.seungh1024.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /*
  * 회원 상세 정보 구현 클래스
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  * */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberInfoServiceImpl implements MemberInfoApplication {
     private final MemberRepository memberRepository;
     private final RandomSalt randomSalt;

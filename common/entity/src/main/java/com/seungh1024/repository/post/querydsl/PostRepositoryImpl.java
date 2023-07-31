@@ -1,10 +1,8 @@
 package com.seungh1024.repository.post.querydsl;
 
 
-import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.seungh1024.entity.comment.QComment;
 import com.seungh1024.entity.post.Post;
@@ -37,17 +35,12 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
 
     
     @Override
-    public Page<PostMemberQueryDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
+    public Page<Post> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
         return applyPagination(pageable,select(
-                Projections.constructor(PostMemberQueryDto.class,
-                        post.postId,
-                        post.postName,
-                        member.memberName,
-                        post.postViews,
-                        post.createdAt
-                ))
+                    post
+                )
                 .from(post)
-                .leftJoin(post.member, member)
+                .leftJoin(post.member, member).fetchJoin()
                 .where(
                         postNameEq(condition.getPostName()),
                         memberNameEq(condition.getMemberName())
@@ -89,7 +82,36 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                         .where(memberIdEq(memberId))
         );
     }
+    public Post detailTestV3(PostDetailCondition condition){
+        return select(
+                post
+        )
+                .from(post)
+                .join(post.member, member).fetchJoin()
+                .leftJoin(post.comments, comment).fetchJoin()
+                .where(postIdEq(condition.getPostId()))
+                .fetchOne();
+    }
 
+    public Post detailTestV1(PostDetailCondition condition){
+        List<Long> commentIdList = select(comment.commentId)
+                .from(comment)
+                .where(postIdEq(condition.getPostId()))
+                .offset(0)
+                .limit(10)
+                .fetch();
+
+        return select(
+                post
+        )
+                .from(post)
+                .join(post.member, member).fetchJoin()
+                .leftJoin(post.comments, comment).fetchJoin()
+                .where(comment.commentId.in(commentIdList),postIdEq(condition.getPostId()))
+                .fetchOne();
+    }
+
+    //TODO 더 나은 방안 있으면 수정해보기
     @Override
     public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
 //        return select(
@@ -110,40 +132,33 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
         // querydsl subquery limit이 동작하지 않는 이슈가 있어서 최적화가 안됨. 댓글 1000개면 다 읽어야 함
 
 
-        String query = "select post.post_id, post.post_name, post.post_content, post.created_at as post_createdAt,post.post_views, " +
-                "member.member_id, member.member_name, " +
-                "comment.comment_id, comment.comment_content, comment.created_at as comment_createdAt\n" +
-                "from post\n" +
-                "join member\n" +
-                "join comment\n" +
-                "on comment.comment_id in(\n" +
-                "    select * from(\n" +
-                "        select comment.comment_id\n" +
-                "        from comment\n" +
-                "        where(comment.post_id = :postId)\n" +
-                "        limit 0,5\n" +
-                "        ) as t\n" +
-                "    )\n" +
-                "where post.post_id = :postId";
+        String query = "select p.post_id, p.post_name, p.post_content, p.created_at,p.post_views," +
+                "pm.member_id as post_member_id ,pm.member_name as post_member_name," +
+                "c.comment_id, c.comment_content, c.created_at," +
+                "cm.member_id , cm.member_name " +
+                "from post p " +
+                "join member pm " +
+                "   on p.member_id = pm.member_id" +
+                "   and p.post_id =:postId " +
+                "left join comment c " +
+                "join member cm " +
+                "   on c.member_id = cm.member_id " +
+                "   and c.comment_id in (select *\n" +
+                "                         from (select cc.comment_id\n" +
+                "                               from comment cc\n" +
+                "                               where (cc.post_id = 1)\n" +
+                "                               limit 0,10) as cl)\n" +
+                "    on p.post_id =:postId";
+
+
         List<Object[]> test = getEntityManager().createNativeQuery(query)
                 .setParameter("postId",condition.getPostId())
                 .getResultList();
 
-        StringBuilder sb = new StringBuilder();
-        for(Object[] o : test){
-            int size = o.length;
-            for(int i = 0; i < size; i++){
-                sb.append(o[i]).append(", ");
-            }
-            sb.append("\n");
-        }
-        System.out.println(sb);
 
         List<PostDetailQueryDto> result = test.stream()
                 .map(o -> new PostDetailQueryDto(o))
                 .toList();
-        System.out.println("===================");
-
 
 
 //        List<PostDetailQueryDto> result = getEntityManager().createNativeQuery(query, PostDetailQueryDto.class)

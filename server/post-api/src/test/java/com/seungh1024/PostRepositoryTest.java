@@ -28,18 +28,20 @@ class PostRepositoryTest {
     MemberRepository memberRepository;
 
 //    @BeforeEach
+//    @Commit
 //    public void before(){
 //        em.createQuery("delete from Post");
 //
 //        Member member = em.find(Member.class,1);
 //        for(int i = 1; i <= 10000; i++){
-//            Post post = Post.createPost("testName "+i , "testContent "+i);
+//            Post post = new Post("testName "+i , "testContent "+i);
 //            em.persist(post);
-//            for(int j = 1; j <=10; j++){
-//                Comment comment = new Comment("JMeter Content Test "+j);
-//                comment.addFk(member,post);
-//                em.persist(comment);
-//            }
+//        }
+//        Post post = em.find(Post.class,1);
+//        for(int j = 1; j <=1000; j++){
+//            Comment comment = new Comment("JMeter Content Test "+j);
+//            comment.addFk(member,post);
+//            em.persist(comment);
 //        }
 //    }
 

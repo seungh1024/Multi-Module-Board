@@ -1,8 +1,9 @@
 package com.seungh1024.service;
 
 import com.seungh1024.custom.InvalidMemberException;
-import com.seungh1024.dto.PostDetailDto;
+import com.seungh1024.dto.response.PostDetailResDto;
 import com.seungh1024.dto.PostDto;
+import com.seungh1024.dto.response.PostResDto;
 import com.seungh1024.entity.member.Member;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.exception.custom.PostNotFoundException;
@@ -13,12 +14,14 @@ import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailQueryDto;
 import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * PostServiceImpl : PostService 구현체
@@ -29,6 +32,7 @@ import java.util.List;
  * */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 //@Transactional(readOnly = true)
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
@@ -51,31 +55,42 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<PostMemberQueryDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
-        return postRepository.searchPosts(condition, pageable);
+    public Page<PostResDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
+        Page<PostResDto> test = postRepository.searchPosts(condition,pageable)
+                .map(post -> new PostResDto(post));
+//        for(PostResDto dto: test){
+//            System.out.println(dto);
+//        }
+        log.info("test={}",test.get().collect(Collectors.toList()));
+        return test;
     }
 
     @Override
-    public PostDetailDto getPostDetails(Long memberId, PostDetailCondition condition) {
+    @Transactional(readOnly = false)
+    public PostDetailResDto getPostDetails(Long memberId, PostDetailCondition condition) {
         List<PostDetailQueryDto> selectPost = postRepository.getPostDetails(condition);
-//        if(selectPost.size() == 0) throw new NullPointerException();
-//        if(!selectPost.get(0).isOwner(memberId)){ // 자신의 게시물이 아니면 조회수 증가
-//            selectPost.updateViews();
-//        }
-//        postRepository.save(selectPost);
-        return new PostDetailDto(selectPost);
+        if(selectPost.isEmpty()) throw new PostNotFoundException();
+        PostDetailResDto postDetailDto = new PostDetailResDto((selectPost));
+        Post post = postRepository.getReferenceById(postDetailDto.getPostId());
+        if(!post.isOwner(memberId)){ // 자신의 게시물이 아니면 조회수 증가
+            post.updateViews();
+        }
+        postRepository.save(post);
+        return postDetailDto;
     }
 
     @Override
     @Transactional(readOnly = false)
     public void modifyPost(Long memberId, PostDetailCondition condition) {
-//        Post selectPost = postRepository.getPostDetails(condition);
-//        if(selectPost == null) throw new PostNotFoundException();
-//        if(!selectPost.isOwner(memberId)) {
-//            throw new InvalidMemberException("권한이 없는 사용자입니다.");
-//        }
-//        selectPost.updatePost(condition.getPostName(), condition.getPostContent());
-//        postRepository.save(selectPost);
+        List<PostDetailQueryDto> selectPost = postRepository.getPostDetails(condition);
+        if(selectPost.isEmpty()) throw new PostNotFoundException();
+        PostDetailResDto postDetailDto = new PostDetailResDto((selectPost));
+        Post post = postRepository.findById(postDetailDto.getPostId()).get();
+        if(!post.isOwner(memberId)) {
+            throw new InvalidMemberException("권한이 없는 사용자입니다.");
+        }
+        post.updatePost(condition.getPostName(), condition.getPostContent());
+        postRepository.save(post);
     }
 
 }

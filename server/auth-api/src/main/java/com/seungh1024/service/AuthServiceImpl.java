@@ -12,12 +12,11 @@ import com.seungh1024.entity.member.MemberInfo;
 import com.seungh1024.repository.auth.LoginTokenRepository;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.utils.JwtUtilImpl;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 * */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService{
     private final MemberRepository memberRepository;
     private final LoginTokenRepository loginTokenRepository;
@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public String refreshAccessToken(String refreshToken, String memberId) {
         LoginTokenDto loginTokenDto = loginTokenRepository.findById(memberId).orElseGet(()->{
             throw new TokenExpiredException();
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public void signup(MemberReqDto.JoinForm memberDto){
         Member member = memberRepository.searchMember(memberDto.getMemberEmail());
         if(member != null){ //이미 존재하면 예외처리
