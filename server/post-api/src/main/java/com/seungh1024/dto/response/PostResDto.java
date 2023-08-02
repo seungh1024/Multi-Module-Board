@@ -10,6 +10,7 @@ package com.seungh1024.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.seungh1024.entity.post.Post;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import static com.seungh1024.time.FormatUtils.BASIC_TIME_PATTERN;
 
 @ToString
+@Getter
 public class PostResDto {
     private final Long postId;
     private final String postName;

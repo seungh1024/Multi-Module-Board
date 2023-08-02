@@ -12,7 +12,6 @@ import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailQueryDto;
-import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
  * PostServiceImpl : PostService 구현체
@@ -50,19 +48,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable) {
-        return postRepository.getMyPosts(memberId,pageable);
+    public Page<PostResDto> getMyPosts(Long memberId, Pageable pageable) {
+        return postRepository.getMyPosts(memberId,pageable)
+                .map(post -> new PostResDto(post));
     }
 
     @Override
     public Page<PostResDto> searchPosts(PostSearchConditionDto condition, Pageable pageable) {
-        Page<PostResDto> test = postRepository.searchPosts(condition,pageable)
+        return postRepository.searchPosts(condition,pageable)
                 .map(post -> new PostResDto(post));
-//        for(PostResDto dto: test){
-//            System.out.println(dto);
-//        }
-        log.info("test={}",test.get().collect(Collectors.toList()));
-        return test;
     }
 
     @Override

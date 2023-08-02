@@ -1,15 +1,11 @@
 package com.seungh1024.repository.post.querydsl;
 
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
-import com.seungh1024.entity.comment.QComment;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailQueryDto;
-import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import com.seungh1024.repository.support.QuerydslSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,17 +55,11 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
     }
 
     @Override
-    public Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable) {
-        return applyPagination(pageable,select(
-                Projections.constructor(PostMemberQueryDto.class,
-                        post.postId,
-                        post.postName,
-                        member.memberName,
-                        post.postViews,
-                        post.createdAt
-                ))
+    public Page<Post> getMyPosts(Long memberId, Pageable pageable) {
+        return applyPagination(pageable,
+                select(post)
                 .from(post)
-                .leftJoin(post.member, member)
+                .leftJoin(post.member, member).fetchJoin()
                 .where(
                         memberIdEq(memberId)
                 )
@@ -114,24 +104,6 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
     //TODO 더 나은 방안 있으면 수정해보기
     @Override
     public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
-//        return select(
-//                post
-//                )
-//                .from(post)
-//                .join(post.member, member).fetchJoin()
-//                .join(post.comments, comment).fetchJoin()
-//                .where(comment.commentId.in(
-//                        JPAExpressions
-//                                .select(comment.commentId)
-//                                .from(comment)
-//                                .where(postIdEq(condition.getPostId()))
-//                                .offset(0)
-//                                .limit(5)
-//                ),postIdEq(condition.getPostId()))
-//                .fetchOne();
-        // querydsl subquery limit이 동작하지 않는 이슈가 있어서 최적화가 안됨. 댓글 1000개면 다 읽어야 함
-
-
         String query = "select p.post_id, p.post_name, p.post_content, p.created_at,p.post_views," +
                 "pm.member_id as post_member_id ,pm.member_name as post_member_name," +
                 "c.comment_id, c.comment_content, c.created_at," +
@@ -160,12 +132,7 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                 .map(o -> new PostDetailQueryDto(o))
                 .toList();
 
-
-//        List<PostDetailQueryDto> result = getEntityManager().createNativeQuery(query, PostDetailQueryDto.class)
-//                .setParameter("postId",condition.getPostId())
-//                .getResultList();
         return result;
-
     }
 
 

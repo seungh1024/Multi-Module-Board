@@ -12,7 +12,6 @@ import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
 import com.seungh1024.repository.post.dto.PostDetailQueryDto;
-import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +19,6 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     Page<Post> searchPosts(PostSearchConditionDto condition, Pageable pageable);
-    Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable);
+    Page<Post> getMyPosts(Long memberId, Pageable pageable);
     List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition);
 }

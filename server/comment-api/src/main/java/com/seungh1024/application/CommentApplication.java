@@ -1,10 +1,9 @@
 package com.seungh1024.application;
 
 import com.seungh1024.dto.CommentCreateBodyDto;
+import com.seungh1024.dto.CommentResDto;
 import com.seungh1024.dto.CommentUpdateBodyDto;
 import com.seungh1024.repository.comment.condition.CommentCondition;
-import com.seungh1024.repository.comment.dto.CommentQueryDto;
-import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,10 +15,10 @@ import org.springframework.data.domain.Pageable;
  *
  * */
 public interface CommentApplication {
-    Page<CommentQueryDto> getCommentList(CommentCondition condition, Pageable pageable);
+    Page<CommentResDto> getCommentList(CommentCondition condition, Pageable pageable);
 
     void createComment(Long memberId, CommentCreateBodyDto commentDto);
 
     void modifyComment(Long memberId, CommentUpdateBodyDto commentDto);
-    Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable);
+    Page<CommentResDto> getMyCommentList(Long memberId, Pageable pageable);
 }

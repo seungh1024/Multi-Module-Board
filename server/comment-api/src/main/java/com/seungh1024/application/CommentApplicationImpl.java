@@ -1,16 +1,9 @@
 package com.seungh1024.application;
 
 import com.seungh1024.dto.CommentCreateBodyDto;
+import com.seungh1024.dto.CommentResDto;
 import com.seungh1024.dto.CommentUpdateBodyDto;
-import com.seungh1024.entity.comment.Comment;
-import com.seungh1024.entity.member.Member;
-import com.seungh1024.entity.post.Post;
-import com.seungh1024.repository.comment.CommentRepository;
 import com.seungh1024.repository.comment.condition.CommentCondition;
-import com.seungh1024.repository.comment.dto.CommentQueryDto;
-import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
-import com.seungh1024.repository.member.MemberRepository;
-import com.seungh1024.repository.post.PostRepository;
 import com.seungh1024.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +23,7 @@ public class CommentApplicationImpl implements CommentApplication {
     private final CommentService commentService;
 
     @Override
-    public Page<CommentQueryDto> getCommentList(CommentCondition condition, Pageable pageable) {
+    public Page<CommentResDto> getCommentList(CommentCondition condition, Pageable pageable) {
         return commentService.getCommentList(condition, pageable);
     }
 
@@ -45,7 +38,7 @@ public class CommentApplicationImpl implements CommentApplication {
     }
 
     @Override
-    public Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable) {
+    public Page<CommentResDto> getMyCommentList(Long memberId, Pageable pageable) {
         return commentService.getMyCommentList(memberId,pageable);
     }
 }

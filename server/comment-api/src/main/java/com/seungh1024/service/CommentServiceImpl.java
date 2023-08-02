@@ -2,6 +2,7 @@ package com.seungh1024.service;
 
 import com.seungh1024.custom.InvalidMemberException;
 import com.seungh1024.dto.CommentCreateBodyDto;
+import com.seungh1024.dto.CommentResDto;
 import com.seungh1024.dto.CommentUpdateBodyDto;
 import com.seungh1024.entity.comment.Comment;
 import com.seungh1024.entity.member.Member;
@@ -9,9 +10,7 @@ import com.seungh1024.entity.post.Post;
 import com.seungh1024.exception.custom.CommentNotFoundException;
 import com.seungh1024.repository.comment.CommentRepository;
 import com.seungh1024.repository.comment.condition.CommentCondition;
-import com.seungh1024.repository.comment.dto.CommentQueryDto;
 import com.seungh1024.repository.comment.dto.CommentUpdateDto;
-import com.seungh1024.repository.comment.dto.MyCommentQueryDto;
 import com.seungh1024.repository.member.MemberRepository;
 import com.seungh1024.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /*
  * Comment Service 구현 클래스
@@ -38,12 +35,12 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
 
     @Override
-    public Page<CommentQueryDto> getCommentList(CommentCondition condition, Pageable pageable) {
-        Page<CommentQueryDto> commentList = commentRepository.getCommentList(condition, pageable);
+    public Page<CommentResDto> getCommentList(CommentCondition condition, Pageable pageable) {
+        Page<Comment> commentList = commentRepository.getCommentList(condition, pageable);
         if (commentList.isEmpty()){
             throw new CommentNotFoundException();
         }
-        return commentList;
+        return commentList.map(comment -> new CommentResDto(comment));
     }
 
     @Override
@@ -71,8 +68,9 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Page<MyCommentQueryDto> getMyCommentList(Long memberId, Pageable pageable) {
-        return commentRepository.getMyCommentList(memberId, pageable);
+    public Page<CommentResDto> getMyCommentList(Long memberId, Pageable pageable) {
+        return commentRepository.getMyCommentList(memberId, pageable)
+                .map(comment -> new CommentResDto(comment));
     }
 
 }

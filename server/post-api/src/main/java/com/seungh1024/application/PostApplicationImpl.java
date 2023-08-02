@@ -3,15 +3,16 @@ package com.seungh1024.application;
 import com.seungh1024.dto.response.PostDetailResDto;
 import com.seungh1024.dto.PostDto;
 import com.seungh1024.dto.response.PostResDto;
-import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
-import com.seungh1024.repository.post.dto.PostMemberQueryDto;
 import com.seungh1024.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 /*
  * PostApplicationImpl : postApplication 구현체
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
  * */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostApplicationImpl implements PostApplication{
     private final PostService postService;
 
@@ -31,7 +33,7 @@ public class PostApplicationImpl implements PostApplication{
     }
 
     @Override
-    public Page<PostMemberQueryDto> getMyPosts(Long memberId, Pageable pageable) {
+    public Page<PostResDto> getMyPosts(Long memberId, Pageable pageable) {
         return postService.getMyPosts(memberId, pageable);
     }
 

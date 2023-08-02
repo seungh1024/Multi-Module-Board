@@ -4,6 +4,7 @@ import com.seungh1024.Response;
 import com.seungh1024.application.PostApplication;
 import com.seungh1024.dto.response.PostDetailResDto;
 import com.seungh1024.dto.PostDto;
+import com.seungh1024.dto.response.PostResDto;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
@@ -11,12 +12,15 @@ import com.seungh1024.repository.post.dto.PostDetailQueryDto;
 import com.seungh1024.repository.post.querydsl.PostRepositoryImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.seungh1024.Response.success;
 
@@ -30,6 +34,7 @@ import static com.seungh1024.Response.success;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/post")
+@Slf4j
 public class PostController {
     private final PostApplication postApplication;
     private final PostRepositoryImpl postRepository;
