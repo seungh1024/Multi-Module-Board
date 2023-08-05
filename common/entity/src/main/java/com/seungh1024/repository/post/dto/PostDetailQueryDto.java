@@ -3,9 +3,12 @@ package com.seungh1024.repository.post.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.seungh1024.entity.post.Post;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.cglib.core.Local;
 
 import java.math.BigInteger;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +21,8 @@ import java.time.format.DateTimeFormatter;
  *
  * */
 @Getter
+//@Setter
+@ToString
 public class PostDetailQueryDto {
     private final Long postId;
     private final String postName;
@@ -54,5 +59,20 @@ public class PostDetailQueryDto {
         this.commentCreatedAt = o[9] == null ? null : LocalDateTime.parse(s,formatter);
         this.commentMemberId = o[10] == null? null: Long.parseLong(o[10].toString());
         this.commentMemberName = o[10] == null? null: (String) o[11];
+    }
+
+    public PostDetailQueryDto(Long postId, String postName, String postContent, LocalDateTime postCreatedAt, Integer postViews, Long postMemberId, String postMemberName, Long commentId, String commentContent, LocalDateTime commentCreatedAt, Long commentMemberId, String commentMemberName) {
+        this.postId = postId;
+        this.postName = postName;
+        this.postContent = postContent;
+        this.postCreatedAt = postCreatedAt;
+        this.postViews = postViews;
+        this.postMemberId = postMemberId;
+        this.postMemberName = postMemberName;
+        this.commentId = commentId;
+        this.commentContent = commentContent;
+        this.commentCreatedAt = commentCreatedAt;
+        this.commentMemberId = commentMemberId;
+        this.commentMemberName = commentMemberName;
     }
 }

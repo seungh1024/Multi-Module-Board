@@ -1,6 +1,7 @@
 package com.seungh1024.repository.post;
 
 import com.seungh1024.entity.post.Post;
+import com.seungh1024.repository.post.jdbc.JdbcRepository;
 import com.seungh1024.repository.post.querydsl.PostRepositoryCustom;
 import com.seungh1024.repository.post.querydsl.PostRepositoryImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,5 @@ import java.util.List;
  *
  * */
 
-public interface PostRepository extends JpaRepository<Post,Long> , PostRepositoryCustom {
+public interface PostRepository extends JpaRepository<Post,Long> , PostRepositoryCustom , JdbcRepository {
 }

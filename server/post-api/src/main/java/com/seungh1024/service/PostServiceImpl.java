@@ -63,6 +63,9 @@ public class PostServiceImpl implements PostService{
     @Transactional(readOnly = false)
     public PostDetailResDto getPostDetails(Long memberId, PostDetailCondition condition) {
         List<PostDetailQueryDto> selectPost = postRepository.getPostDetails(condition);
+        for(PostDetailQueryDto dt : selectPost){
+            System.out.println(dt.getPostId());
+        }
         if(selectPost.isEmpty()) throw new PostNotFoundException();
         PostDetailResDto postDetailDto = new PostDetailResDto((selectPost));
         Post post = postRepository.getReferenceById(postDetailDto.getPostId());

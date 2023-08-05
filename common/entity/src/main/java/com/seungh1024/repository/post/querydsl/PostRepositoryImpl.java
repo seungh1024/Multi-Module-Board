@@ -101,8 +101,9 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                 .fetchOne();
     }
 
-    //TODO 더 나은 방안 있으면 수정해보기
-    @Override
+    //TODO Jdbc로 수정됨
+//    @Override
+    @Deprecated
     public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
         String query = "select p.post_id, p.post_name, p.post_content, p.created_at,p.post_views," +
                 "pm.member_id as post_member_id ,pm.member_name as post_member_name," +
