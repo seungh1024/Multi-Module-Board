@@ -32,6 +32,7 @@ public class PostDetailResDto {
     private final List<CommentDetailResDto> commentList;
 
 
+
     public PostDetailResDto(List<PostDetailQueryDto> selectPost) {
         PostDetailQueryDto postDetail = selectPost.get(0);
         this.postId = postDetail.getPostId();
@@ -41,7 +42,7 @@ public class PostDetailResDto {
         this.postViews = postDetail.getPostViews();
         this.createdAt = postDetail.getPostCreatedAt();
         this.postContent = postDetail.getPostContent();
-        if(postDetail.getCommentId() != null){
+        if(postDetail.getCommentId() != 0){
             this.commentList = selectPost.stream()
                     .map(comment -> new CommentDetailResDto(comment.getCommentId(),comment.getCommentContent(), comment.getCommentCreatedAt(),comment.getCommentMemberId(), comment.getCommentMemberName()))
                     .toList();

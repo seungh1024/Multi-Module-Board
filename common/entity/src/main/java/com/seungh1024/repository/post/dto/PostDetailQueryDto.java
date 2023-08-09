@@ -37,6 +37,7 @@ public class PostDetailQueryDto {
     private final Long commentMemberId;
     private final String commentMemberName;
 
+    //querydsl native query 생성자
     public PostDetailQueryDto(Object[] o) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         this.postId = Long.parseLong(o[0].toString());
@@ -61,6 +62,7 @@ public class PostDetailQueryDto {
         this.commentMemberName = o[10] == null? null: (String) o[11];
     }
 
+    //querydsl 생성자
     public PostDetailQueryDto(Long postId, String postName, String postContent, LocalDateTime postCreatedAt, Integer postViews, Long postMemberId, String postMemberName, Long commentId, String commentContent, LocalDateTime commentCreatedAt, Long commentMemberId, String commentMemberName) {
         this.postId = postId;
         this.postName = postName;
@@ -74,5 +76,21 @@ public class PostDetailQueryDto {
         this.commentCreatedAt = commentCreatedAt;
         this.commentMemberId = commentMemberId;
         this.commentMemberName = commentMemberName;
+    }
+
+    //jdbc 생성자
+    public PostDetailQueryDto(Long postId, String postName, String postContent, Timestamp postCreatedAt, Integer postViews, Long postMemberId, String postMemberName, Long commentId, String commentContent, Timestamp commentCreatedAt, Long commentMemberId, String commentMemberName) {
+        this.postId = postId != null? postId:null;
+        this.postName = postName != null? postName:null;;
+        this.postContent = postContent != null? postContent:null;;
+        this.postCreatedAt = postCreatedAt != null? postCreatedAt.toLocalDateTime():null;;
+        this.postViews = postViews != null? postViews:null;;
+        this.postMemberId = postMemberId != null? postMemberId:null;;
+        this.postMemberName = postMemberName != null? postMemberName:null;;
+        this.commentId = commentId != null? commentId:null;;
+        this.commentContent = commentContent != null? commentContent:null;;
+        this.commentCreatedAt = commentCreatedAt != null? commentCreatedAt.toLocalDateTime():null;;
+        this.commentMemberId = commentMemberId != null? commentMemberId:null;;
+        this.commentMemberName = commentMemberName != null? commentMemberName:null;;
     }
 }

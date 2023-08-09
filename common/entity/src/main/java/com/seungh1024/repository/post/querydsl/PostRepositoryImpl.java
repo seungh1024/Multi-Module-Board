@@ -1,7 +1,10 @@
 package com.seungh1024.repository.post.querydsl;
 
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.seungh1024.entity.comment.QComment;
+import com.seungh1024.entity.member.QMember;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
 import com.seungh1024.repository.post.condition.PostSearchConditionDto;
@@ -103,37 +106,34 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
 
     //TODO Jdbc로 수정됨
 //    @Override
-    @Deprecated
-    public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
-        String query = "select p.post_id, p.post_name, p.post_content, p.created_at,p.post_views," +
-                "pm.member_id as post_member_id ,pm.member_name as post_member_name," +
-                "c.comment_id, c.comment_content, c.created_at," +
-                "cm.member_id , cm.member_name " +
-                "from post p " +
-                "join member pm " +
-                "   on p.member_id = pm.member_id" +
-                "   and p.post_id =:postId " +
-                "left join comment c " +
-                "join member cm " +
-                "   on c.member_id = cm.member_id " +
-                "   and c.comment_id in (select *\n" +
-                "                         from (select cc.comment_id\n" +
-                "                               from comment cc\n" +
-                "                               where (cc.post_id = 1)\n" +
-                "                               limit 0,10) as cl)\n" +
-                "    on p.post_id =:postId";
-
-
-        List<Object[]> test = getEntityManager().createNativeQuery(query)
-                .setParameter("postId",condition.getPostId())
-                .getResultList();
-
-
-        List<PostDetailQueryDto> result = test.stream()
-                .map(o -> new PostDetailQueryDto(o))
-                .toList();
-
-        return result;
+//    @Deprecated
+    public List<PostDetailQueryDto> getPostDetailsOrigin(PostDetailCondition condition) {
+        QMember commentMember = new QMember("commentMember");
+        return select(Projections.constructor(PostDetailQueryDto.class,
+                    post.postId,
+                    post.postName,
+                    post.postContent,
+                    post.createdAt,
+                    post.postViews,
+                    member.memberId,
+                    member.memberName,
+                    comment.commentId,
+                    comment.commentContent,
+                    comment.createdAt,
+                    commentMember.memberId,
+                    commentMember.memberName
+                ))
+                .from(post)
+                .join(post.member, member)
+                .on(postIdEq(condition.getPostId()))
+                .leftJoin(post.comments, comment)
+                .on(comment.post.postId.eq(post.postId))
+                    .join(comment.member, commentMember)
+                .on(comment.post.postId.eq(condition.getPostId()))
+                .orderBy(comment.commentId.asc())
+                .offset(0)
+                .limit(10)
+                .fetch();
     }
 
 

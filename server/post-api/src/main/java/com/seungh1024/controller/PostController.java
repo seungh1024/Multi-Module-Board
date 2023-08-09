@@ -79,7 +79,7 @@ public class PostController {
     }
     @GetMapping("/detailV2")
     public Response<?> detailQueryTestV2(@AuthenticationPrincipal Long memberId, PostDetailCondition condition){
-        List<PostDetailQueryDto> selectPost = postRepository.getPostDetails(condition);
+        List<PostDetailQueryDto> selectPost = postRepository.getPostDetailsOrigin(condition);
         return success(new PostDetailResDto((selectPost)));
     }
     @GetMapping("/detailV3")
