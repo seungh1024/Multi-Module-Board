@@ -20,4 +20,4 @@
 
 ## 프로젝트를 진행하며 발생한 고민, 이슈 해결 과정
 
-- Entity와 DTO를 구분해야 하는 이유(https://seungh1024.tistory.com/63)
+- [Entity와 DTO를 구분해야 하는 이유](https://seungh1024.tistory.com/63)
