@@ -25,3 +25,14 @@
 - [토큰 탈취시 나름의 해결 방법 고민 및 적용](https://seungh1024.tistory.com/63)
 - [코드의 의존성 리팩토링](https://seungh1024.tistory.com/91)
 - [쿼리 수정 및 최적화와 JMeter를 사용한 비교](https://seungh1024.tistory.com/92)
+
+## 사용 기술
+
+- Java17
+- SpringBoot 3
+- Gradle
+- MySQL
+- Redis
+- Querydsl
+- SpringDataJPA
+- JdbcTemplate
