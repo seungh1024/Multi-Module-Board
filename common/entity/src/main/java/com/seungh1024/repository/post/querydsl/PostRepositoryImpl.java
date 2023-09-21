@@ -3,7 +3,6 @@ package com.seungh1024.repository.post.querydsl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.seungh1024.entity.comment.QComment;
 import com.seungh1024.entity.member.QMember;
 import com.seungh1024.entity.post.Post;
 import com.seungh1024.repository.post.condition.PostDetailCondition;
@@ -20,7 +19,7 @@ import static com.seungh1024.entity.comment.QComment.comment;
 import static com.seungh1024.entity.member.QMember.member;
 import static com.seungh1024.entity.post.QPost.post;
 
-/*
+/**
  * PostRepositoryCustom 구현체
  *
  * @Author 강승훈
@@ -75,39 +74,9 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                         .where(memberIdEq(memberId))
         );
     }
-    public Post detailTestV3(PostDetailCondition condition){
-        return select(
-                post
-        )
-                .from(post)
-                .join(post.member, member).fetchJoin()
-                .leftJoin(post.comments, comment).fetchJoin()
-                .where(postIdEq(condition.getPostId()))
-                .fetchOne();
-    }
 
-    public Post detailTestV1(PostDetailCondition condition){
-        List<Long> commentIdList = select(comment.commentId)
-                .from(comment)
-                .where(postIdEq(condition.getPostId()))
-                .offset(0)
-                .limit(10)
-                .fetch();
-
-        return select(
-                post
-        )
-                .from(post)
-                .join(post.member, member).fetchJoin()
-                .leftJoin(post.comments, comment).fetchJoin()
-                .where(comment.commentId.in(commentIdList),postIdEq(condition.getPostId()))
-                .fetchOne();
-    }
-
-    //TODO Jdbc로 수정됨
-//    @Override
-//    @Deprecated
-    public List<PostDetailQueryDto> getPostDetailsOrigin(PostDetailCondition condition) {
+    @Override
+    public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
         QMember commentMember = new QMember("commentMember");
         return select(Projections.constructor(PostDetailQueryDto.class,
                     post.postId,
@@ -129,13 +98,14 @@ public class PostRepositoryImpl extends QuerydslSupport implements PostRepositor
                 .leftJoin(post.comments, comment)
                 .on(comment.post.postId.eq(post.postId))
                     .join(comment.member, commentMember)
-                .on(comment.post.postId.eq(condition.getPostId()))
+                .on(commentPostIdEq(condition.getPostId()))
                 .orderBy(comment.commentId.asc())
                 .offset(0)
                 .limit(10)
                 .fetch();
     }
 
+    private BooleanExpression commentPostIdEq(Long postId){ return comment.post.postId.eq(postId);}
 
     private BooleanExpression postIdEq(Long postId){
         return post.postId.eq(postId);

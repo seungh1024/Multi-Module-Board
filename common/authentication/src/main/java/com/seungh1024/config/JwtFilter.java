@@ -1,6 +1,6 @@
 package com.seungh1024.config;
 
-import com.seungh1024.exception.JwtErrorCode;
+import com.seungh1024.exception.FilterErrorCode;
 import com.seungh1024.utils.JwtUtilImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -89,13 +90,15 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             //유효한 토큰인 경우
         }catch(ExpiredJwtException e){
-            request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name());
+            request.setAttribute("exception", FilterErrorCode.TOKEN_EXPIRED_ERROR.name());
         }catch(SignatureException e) {
-            request.setAttribute("exception", JwtErrorCode.TOKEN_SIGNATURE_ERROR.name());
+            request.setAttribute("exception", FilterErrorCode.TOKEN_SIGNATURE_ERROR.name());
         }catch(MalformedJwtException e){
-            request.setAttribute("exception", JwtErrorCode.TOKEN_NOT_CORRECT.name());
+            request.setAttribute("exception", FilterErrorCode.TOKEN_NOT_CORRECT.name());
         }catch(AccountExpiredException e){
-            request.setAttribute("exception", JwtErrorCode.TOKEN_EXPIRED_ERROR.name()); //토큰 만료와 같은 에러를 던져줌
+            request.setAttribute("exception", FilterErrorCode.TOKEN_EXPIRED_ERROR.name()); //토큰 만료와 같은 에러를 던져줌
+        }catch(RedisConnectionFailureException e){
+            request.setAttribute("exception", FilterErrorCode.DATABASE_CONNECTION_ERROR.name());
         }catch (Exception e){
             log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
             e.printStackTrace();

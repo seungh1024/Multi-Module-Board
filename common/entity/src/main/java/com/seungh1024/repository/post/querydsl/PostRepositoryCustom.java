@@ -20,5 +20,5 @@ import java.util.List;
 public interface PostRepositoryCustom {
     Page<Post> searchPosts(PostSearchConditionDto condition, Pageable pageable);
     Page<Post> getMyPosts(Long memberId, Pageable pageable);
-//    List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition);
+    List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition);
 }

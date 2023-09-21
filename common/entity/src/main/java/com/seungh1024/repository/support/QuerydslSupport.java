@@ -80,6 +80,6 @@ public class QuerydslSupport {
     }
 
     protected <T> Page<T> applyPagination(Pageable pageable, JPAQuery contentQuery, JPAQuery<Long> countQuery){
-        return PageableExecutionUtils.getPage(contentQuery.fetch(), pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(contentQuery.fetch(), pageable, ()->countQuery.fetchOne());
     }
 }

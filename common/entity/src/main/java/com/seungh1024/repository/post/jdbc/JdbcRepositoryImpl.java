@@ -15,6 +15,7 @@ import java.util.List;
 public class JdbcRepositoryImpl implements JdbcRepository{
     private final NamedParameterJdbcTemplate jdbcTemplate;
     @Override
+    @Deprecated
     public List<PostDetailQueryDto> getPostDetails(PostDetailCondition condition) {
 //        String sql = "select p.post_id, p.post_name, p.post_content, p.created_at as post_created_at,p.post_views," +
 //                "pm.member_id as post_member_id ,pm.member_name as post_member_name," +

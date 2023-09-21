@@ -71,21 +71,4 @@ public class PostController {
         return success();
     }
 
-    @GetMapping("/detailV1")
-    public Response<?> detailQueryTestV1(@AuthenticationPrincipal Long memberId, PostDetailCondition condition){
-        Post post = postRepository.detailTestV1(condition);
-        PostDetailV1 v1 = new PostDetailV1(post);
-        return success(v1);
-    }
-    @GetMapping("/detailV2")
-    public Response<?> detailQueryTestV2(@AuthenticationPrincipal Long memberId, PostDetailCondition condition){
-        List<PostDetailQueryDto> selectPost = postRepository.getPostDetailsOrigin(condition);
-        return success(new PostDetailResDto((selectPost)));
-    }
-    @GetMapping("/detailV3")
-    public Response<?> detailQueryTestV3(@AuthenticationPrincipal Long memberId, PostDetailCondition condition){
-        Post post = postRepository.detailTestV3(condition);
-        PostDetailV1 v1 = new PostDetailV1(post);
-        return success(v1);
-    }
 }

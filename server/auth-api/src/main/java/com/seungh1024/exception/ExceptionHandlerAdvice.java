@@ -14,8 +14,10 @@ import com.seungh1024.exception.custom.*;
 import com.seungh1024.encrypt.EncryptException;
 import com.seungh1024.exception.encrypt.EncryptErrorCode;
 import com.seungh1024.exception.member.MemberErrorCode;
+import io.lettuce.core.RedisConnectionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -142,6 +144,16 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity handleInvalidAccessException(InvalidAccessException e){
         log.error("[InvalidAccessException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ErrorCode errorCode = MemberErrorCode.INVALID_ACCESS_ERROR;
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
+                errorCode.getCode(),
+                errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(RedisConnectionFailureException.class)
+    public ResponseEntity handleRedisConnectionException(RedisConnectionFailureException e){
+        log.error("[InvalidAccessException] cause: {}, message: {}",NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
+        ErrorCode errorCode = CommonErrorCode.DATABASE_CONNECTION_ERROR;
         ErrorResponse errorResponse = ErrorResponse.of(errorCode.getHttpStatus(),
                 errorCode.getCode(),
                 errorCode.getMessage());
